@@ -56,8 +56,10 @@ fi
 echo "Tool(s) to install for: ${detected_tools[*]}"
 echo ""
 
-# ── Copy core files (memory + agent-os) ────────────────────────
-copy_with_confirm() {
+# ── Helpers ────────────────────────────────────────────────────
+
+# Single-file copy with explicit overwrite prompt. Default = skip.
+copy_file_safe() {
   local src="$1"
   local dst="$2"
   if [ -e "$dst" ]; then
@@ -65,18 +67,69 @@ copy_with_confirm() {
     case "$yn" in [Yy]*) ;; *) echo "  Skipped: $dst"; return 0 ;; esac
   fi
   mkdir -p "$(dirname "$dst")"
-  cp -R "$src" "$dst"
+  cp "$src" "$dst"
   echo "  Copied: $dst"
 }
 
-echo "Copying memory/ + agent-os/ + scripts/..."
-[ ! -d "$TARGET_ROOT/memory" ] && cp -R "$SOURCE_ROOT/memory" "$TARGET_ROOT/" && echo "  Copied: memory/"
-[ ! -d "$TARGET_ROOT/agent-os" ] && cp -R "$SOURCE_ROOT/agent-os" "$TARGET_ROOT/" && echo "  Copied: agent-os/"
-mkdir -p "$TARGET_ROOT/scripts"
-copy_with_confirm "$SOURCE_ROOT/scripts/context.sh" "$TARGET_ROOT/scripts/context.sh"
-copy_with_confirm "$SOURCE_ROOT/scripts/git-hooks" "$TARGET_ROOT/scripts/git-hooks"
+# Directory copy with skip/merge/backup options. Default = skip.
+# Merge = only files that don't exist in dst (never overwrites).
+# Backup = mv existing dst to .backup-TIMESTAMP, then full copy from src.
+copy_dir_safe() {
+  local src="$1"
+  local dst="$2"
+  local label="$3"
+  if [ ! -d "$src" ]; then
+    echo "  Source missing: $src (skipped)"
+    return 0
+  fi
+  if [ ! -d "$dst" ]; then
+    cp -R "$src" "$dst"
+    echo "  Copied: $dst"
+    return 0
+  fi
+  echo "  $label/ already exists at $dst"
+  echo "    [s]kip (default)  — leave existing as-is"
+  echo "    [m]erge           — copy only new files, never overwrite"
+  echo "    [b]ackup-replace  — mv existing to .backup-TIMESTAMP, install fresh"
+  read -r -p "    Choose [s/m/b]: " choice
+  case "$choice" in
+    m|M)
+      # Merge: copy file-by-file, only when dst doesn't have it
+      (cd "$src" && find . -type f) | while read -r rel; do
+        if [ ! -e "$dst/$rel" ]; then
+          mkdir -p "$dst/$(dirname "$rel")"
+          cp "$src/$rel" "$dst/$rel"
+        fi
+      done
+      echo "    Merged new files into $dst (existing files untouched)"
+      ;;
+    b|B)
+      local backup="$dst.backup-$(date +%Y%m%d-%H%M%S)"
+      mv "$dst" "$backup"
+      cp -R "$src" "$dst"
+      echo "    Backed up original to: $backup"
+      echo "    Installed fresh: $dst"
+      ;;
+    *)
+      echo "    Skipped: $dst (kept existing)"
+      ;;
+  esac
+}
+
+# ── Copy core directories (memory + agent-os) ──────────────────
+echo "Installing memory/ and agent-os/..."
+copy_dir_safe "$SOURCE_ROOT/memory" "$TARGET_ROOT/memory" "memory"
+copy_dir_safe "$SOURCE_ROOT/agent-os" "$TARGET_ROOT/agent-os" "agent-os"
+
+# ── Copy scripts (file-by-file, never directory-wide) ──────────
+echo "Installing scripts/..."
+mkdir -p "$TARGET_ROOT/scripts/git-hooks"
+copy_file_safe "$SOURCE_ROOT/scripts/context.sh"                    "$TARGET_ROOT/scripts/context.sh"
+copy_file_safe "$SOURCE_ROOT/scripts/git-hooks/pre-commit"          "$TARGET_ROOT/scripts/git-hooks/pre-commit"
+copy_file_safe "$SOURCE_ROOT/scripts/git-hooks/check-staleness.py"  "$TARGET_ROOT/scripts/git-hooks/check-staleness.py"
+copy_file_safe "$SOURCE_ROOT/scripts/git-hooks/README.md"           "$TARGET_ROOT/scripts/git-hooks/README.md"
 chmod +x "$TARGET_ROOT/scripts/context.sh" 2>/dev/null
-chmod +x "$TARGET_ROOT/scripts/git-hooks/"*.py 2>/dev/null
+chmod +x "$TARGET_ROOT/scripts/git-hooks/check-staleness.py" 2>/dev/null
 chmod +x "$TARGET_ROOT/scripts/git-hooks/pre-commit" 2>/dev/null
 
 echo ""
@@ -86,23 +139,23 @@ for tool in "${detected_tools[@]}"; do
   echo "Wiring adapter: $tool"
   case "$tool" in
     claude-code)
-      copy_with_confirm "$SOURCE_ROOT/CLAUDE.md" "$TARGET_ROOT/CLAUDE.md"
-      copy_with_confirm "$SOURCE_ROOT/AGENTS.md" "$TARGET_ROOT/AGENTS.md"
+      copy_file_safe "$SOURCE_ROOT/CLAUDE.md" "$TARGET_ROOT/CLAUDE.md"
+      copy_file_safe "$SOURCE_ROOT/AGENTS.md" "$TARGET_ROOT/AGENTS.md"
       ;;
     codex)
-      copy_with_confirm "$SOURCE_ROOT/AGENTS.md" "$TARGET_ROOT/AGENTS.md"
+      copy_file_safe "$SOURCE_ROOT/AGENTS.md" "$TARGET_ROOT/AGENTS.md"
       ;;
     cursor)
-      copy_with_confirm "$SOURCE_ROOT/AGENTS.md" "$TARGET_ROOT/AGENTS.md"
-      copy_with_confirm "$SOURCE_ROOT/adapters/cursor/.cursor/rules/main.mdc" "$TARGET_ROOT/.cursor/rules/main.mdc"
+      copy_file_safe "$SOURCE_ROOT/AGENTS.md" "$TARGET_ROOT/AGENTS.md"
+      copy_file_safe "$SOURCE_ROOT/adapters/cursor/.cursor/rules/main.mdc" "$TARGET_ROOT/.cursor/rules/main.mdc"
       ;;
     aider)
-      copy_with_confirm "$SOURCE_ROOT/AGENTS.md" "$TARGET_ROOT/AGENTS.md"
-      copy_with_confirm "$SOURCE_ROOT/adapters/aider/CONVENTIONS.md" "$TARGET_ROOT/CONVENTIONS.md"
+      copy_file_safe "$SOURCE_ROOT/AGENTS.md" "$TARGET_ROOT/AGENTS.md"
+      copy_file_safe "$SOURCE_ROOT/adapters/aider/CONVENTIONS.md" "$TARGET_ROOT/CONVENTIONS.md"
       ;;
     windsurf)
-      copy_with_confirm "$SOURCE_ROOT/AGENTS.md" "$TARGET_ROOT/AGENTS.md"
-      copy_with_confirm "$SOURCE_ROOT/adapters/windsurf/.windsurfrules" "$TARGET_ROOT/.windsurfrules"
+      copy_file_safe "$SOURCE_ROOT/AGENTS.md" "$TARGET_ROOT/AGENTS.md"
+      copy_file_safe "$SOURCE_ROOT/adapters/windsurf/.windsurfrules" "$TARGET_ROOT/.windsurfrules"
       ;;
   esac
 done
@@ -128,7 +181,9 @@ fi
 
 echo ""
 echo "Install complete. Next steps:"
-echo "  1. Open the project in your AI tool — it should auto-load AGENTS.md/CLAUDE.md"
-echo "  2. Replace the Acme Notes example content with your real project context"
-echo "  3. Optional: rename memory/USER.md.template → memory/USER.md and fill in"
-echo "  4. Optional: rename agent-os/rules/identity.md.template → identity.md to define your AI's persona"
+echo "  1. Verify memory loads: bash scripts/context.sh"
+echo "     (should print STATE + INDEX + learnings + latest daily without errors)"
+echo "  2. Open the project in your AI tool — it should auto-load AGENTS.md/CLAUDE.md"
+echo "  3. Replace the Acme Notes example content with your real project context"
+echo "  4. Optional: rename memory/USER.md.template → memory/USER.md and fill in"
+echo "  5. Optional: rename agent-os/rules/identity.md.template → identity.md to define your AI's persona"
