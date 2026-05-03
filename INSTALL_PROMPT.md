@@ -19,6 +19,31 @@ Both build on Karpathy's LLM wiki pattern. Advanced Mode adds operational state,
 
 ## Procedure
 
+### Step 0 — Classify the target
+
+Before installing, look at the current directory.
+
+**If this is an existing project** (has package config, source files, README with content) → continue to Step 1.
+
+**If this is an empty or near-empty directory** → ASK the user which mode they want:
+
+1. **New project bootstrap** — they have an idea but no code yet. Help them write a minimal `README.md` with the project name + one-line description, run `git init` if needed, then continue from Step 1 using their stated priorities.
+
+2. **Personal knowledge wiki** — no project at all (note-taking, research, reading, learning, vision tracking, knowledge garden). This is closer to Karpathy's original use case.
+   - Install **Simple Mode only** (`starter/`)
+   - Skip Steps 1 and 2 — there's no "project" to inspect or mode to choose
+   - In Step 4 customization: skip project/team/client/priority items entirely
+   - Reframe `memory/STATE.md` from "Current State / Priorities" to **"Current Focus"** — what you're learning, exploring, or thinking about right now. No team table, no blockers, no priority levels — just a few bullets describing your current attention.
+   - Keep all of: `wiki/`, `raw/`, `outputs/`, `daily/`, `learnings.md`, `AGENTS.md`/`CLAUDE.md`
+   - Do NOT install Advanced Mode (`agent-os/rules/`, `agents/`, `hooks/`, `scripts/git-hooks/`) — those are project-ops oriented and will feel heavy here
+   - User's role is "LLM-wiki gardener", not "project owner"
+
+3. **Wait, I'll bring an existing project here first** — pause. Acknowledge and stop until they're ready.
+
+Once the user picks, proceed accordingly.
+
+---
+
 ### Step 1 — Inspect the user's project
 
 Before doing anything destructive, gather context.
