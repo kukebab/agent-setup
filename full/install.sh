@@ -6,7 +6,7 @@
 # checking. Does NOT overwrite existing files without confirmation.
 #
 # Run from the project root where you want to install agent-os:
-#   bash /path/to/agent-os-starter/full/install.sh
+#   bash /path/to/agent-setup/full/install.sh
 #
 # Or copy this entire repo and run from inside `full/`:
 #   bash install.sh
@@ -191,7 +191,7 @@ else
 Schema version: $SCHEMA_VERSION
 Installed: $TODAY
 Last synced: $TODAY
-Source: https://github.com/bruceorchestrator/agent-os-starter (full/ mode)
+Source: https://github.com/kukebab/agent-setup (full/ mode)
 
 To check for updates: compare "Schema version" above against CHANGELOG.md in the
 source repo. Entries dated after this are changes not yet applied here. See

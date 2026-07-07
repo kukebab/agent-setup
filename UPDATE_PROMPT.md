@@ -1,4 +1,4 @@
-# Update Prompt — agent-os-starter
+# Update Prompt — agent-setup
 
 > **Read this carefully. You are an AI agent updating an existing agent-os install to a newer version of the schema.**
 
@@ -7,7 +7,7 @@ project has no `agent/` folder yet, use `INSTALL_PROMPT.md` instead — this is 
 
 ## Source
 
-Reference repo: **https://github.com/bruceorchestrator/agent-os-starter**
+Reference repo: **https://github.com/kukebab/agent-setup**
 
 Fetch its `CHANGELOG.md` and `full/agent/` contents.
 

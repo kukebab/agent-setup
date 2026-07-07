@@ -1,4 +1,4 @@
-# Install Prompt — agent-os-starter
+# Install Prompt — agent-setup
 
 > **Read this carefully. You are an AI agent installing a memory + governance system into the user's project or knowledge workspace.**
 
@@ -6,7 +6,7 @@ This document is the install procedure. Follow it step by step. Do not skip step
 
 ## Source
 
-Reference repo: **https://github.com/bruceorchestrator/agent-os-starter**
+Reference repo: **https://github.com/kukebab/agent-setup**
 
 Fetch its contents (via web fetch, git clone, or your equivalent). Two modes ship there:
 
@@ -363,4 +363,4 @@ Don't guess. The cost of asking is 30 seconds. The cost of guessing wrong is res
 
 ## Ground truth
 
-This document is a guide. The reference is the agent-os-starter repo itself. If anything here is unclear, fetch the actual file from the repo and follow its structure.
+This document is a guide. The reference is the agent-setup repo itself. If anything here is unclear, fetch the actual file from the repo and follow its structure.

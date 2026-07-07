@@ -167,7 +167,7 @@ Full rule + cohesion exceptions: `agent/rules/file-size-triggers.md`.
 ## References
 
 - **[Karpathy's LLM wiki gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f)** — the foundational pattern
-- **[agent-os-starter](https://github.com/bruceorchestrator/agent-os-starter)** — this repo
+- **[agent-setup](https://github.com/kukebab/agent-setup)** — this repo
 - **`agent/memory/INDEX.md`** — top-level navigation
 - **`agent/rules/`** — behavioral policies (read on demand, per the rules table above)
 - **`agent/skills/`** — workflows (invoked by trigger or slash command)

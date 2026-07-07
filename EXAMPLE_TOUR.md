@@ -1,4 +1,4 @@
-# Tour — agent-os-starter
+# Tour — agent-setup
 
 5-minute walkthrough using the fictional Acme Notes example.
 

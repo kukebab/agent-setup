@@ -1,4 +1,4 @@
-# agent-os-starter
+# agent-setup
 
 > A concrete implementation of [Andrej Karpathy's LLM wiki pattern](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f), adapted for AI coding agents working in real codebases.
 
@@ -42,14 +42,14 @@ Both build on the same foundation. **Start Simple, graduate to Advanced when you
 ### Option B — manual
 
 ```bash
-git clone https://github.com/bruceorchestrator/agent-os-starter
+git clone https://github.com/kukebab/agent-setup
 cd /path/to/your-project/
 
 # Advanced Mode (recommended for real projects)
-bash /path/to/agent-os-starter/full/install.sh
+bash /path/to/agent-setup/full/install.sh
 
 # Or Simple Mode (just copy starter/ into your project)
-cp -R /path/to/agent-os-starter/starter/. /path/to/your-project/
+cp -R /path/to/agent-setup/starter/. /path/to/your-project/
 ```
 
 See [`INSTALL.md`](INSTALL.md) for the full manual walkthrough.

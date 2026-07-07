@@ -47,7 +47,7 @@ Simple Mode is for projects where one or two people work with one or two AI agen
 - Hooks (runtime enforcement: session-start auto-load, commit memory reminders)
 - Pre-commit governance (staleness checks, source-of-truth discipline)
 
-→ See [Advanced Mode in `../full/`](https://github.com/bruceorchestrator/agent-os-starter/tree/main/full).
+→ See [Advanced Mode in `../full/`](https://github.com/kukebab/agent-setup/tree/main/full).
 
 ## Credits
 

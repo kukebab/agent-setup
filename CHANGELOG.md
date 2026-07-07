@@ -1,6 +1,6 @@
 # Changelog
 
-Notable changes to the agent-os-starter pattern (`starter/` and `full/` modes). This is a
+Notable changes to the agent-setup pattern (`starter/` and `full/` modes). This is a
 changelog for the **pattern itself**, not for any project that has installed it.
 
 Each entry is dated `YYYY-MM-DD`. If you have this pattern installed in a project, compare

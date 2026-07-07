@@ -92,9 +92,9 @@ This setup works for a small team with one or two AI agents. When you need:
 - Skills (reusable workflows like `/ingest`, `/lint`)
 - Hooks (runtime enforcement, pre-commit governance)
 
-→ See [agent-os-starter Advanced Mode](https://github.com/bruceorchestrator/agent-os-starter/tree/main/full).
+→ See [agent-setup Advanced Mode](https://github.com/kukebab/agent-setup/tree/main/full).
 
 ## References
 
 - [Karpathy's LLM wiki gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) — the foundational pattern.
-- [agent-os-starter](https://github.com/bruceorchestrator/agent-os-starter) — this repo.
+- [agent-setup](https://github.com/kukebab/agent-setup) — this repo.

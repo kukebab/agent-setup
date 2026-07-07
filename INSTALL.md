@@ -19,8 +19,8 @@ If unsure → start Simple. Graduate later by copying `full/agent/` over your ex
 ## Simple Mode install
 
 ```bash
-git clone https://github.com/bruceorchestrator/agent-os-starter
-cp -R agent-os-starter/starter/. /path/to/your-project/
+git clone https://github.com/kukebab/agent-setup
+cp -R agent-setup/starter/. /path/to/your-project/
 ```
 
 Then edit:
@@ -36,9 +36,9 @@ That's it. 12 files, ~5 minutes.
 ## Advanced Mode install
 
 ```bash
-git clone https://github.com/bruceorchestrator/agent-os-starter
+git clone https://github.com/kukebab/agent-setup
 cd /path/to/your-project/
-bash /path/to/agent-os-starter/full/install.sh
+bash /path/to/agent-setup/full/install.sh
 ```
 
 The installer:

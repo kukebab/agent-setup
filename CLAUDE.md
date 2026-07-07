@@ -1,8 +1,8 @@
 <!-- This file mirrors AGENTS.md for Claude Code compatibility. Keep both in sync. -->
 
-# agent-os-starter — How to Work Inside This Repo
+# agent-setup — How to Work Inside This Repo
 
-> If you're an AI agent inside the `agent-os-starter` repo (not a user project that's installed it), this file tells you how to behave. It is **not** a project schema — it's a meta-doc for contributors.
+> If you're an AI agent inside the `agent-setup` repo (not a user project that's installed it), this file tells you how to behave. It is **not** a project schema — it's a meta-doc for contributors.
 
 If you got here by following an install link, you want [`INSTALL_PROMPT.md`](INSTALL_PROMPT.md), not this file.
 
@@ -39,14 +39,14 @@ If the scrub finds anything, fix before committing.
 
 ## Working memory for this repo
 
-This repo's own working memory lives in the **parent operating-os repo**, at `memory/outputs/agent-os-starter/CONTEXT.md`. That file holds the canonical Acme Notes context (team, priorities, partners, etc.) — refer back to it when populating example files to keep names and dates consistent.
+This repo's own working memory lives in the **parent operating-os repo**, at `memory/outputs/agent-setup/CONTEXT.md`. That file holds the canonical Acme Notes context (team, priorities, partners, etc.) — refer back to it when populating example files to keep names and dates consistent.
 
-The `agent-os-starter` repo itself does **not** have a `memory/` directory at root — that would conflict with users who install this pattern into their projects. The example `memory/` only exists inside `starter/` and `full/`.
+The `agent-setup` repo itself does **not** have a `memory/` directory at root — that would conflict with users who install this pattern into their projects. The example `memory/` only exists inside `starter/` and `full/`.
 
 ## Repo layout
 
 ```
-agent-os-starter/
+agent-setup/
 ├── README.md                ← human-facing pitch
 ├── INSTALL.md               ← human manual install
 ├── INSTALL_PROMPT.md        ← THE killer file — paste-into-AI installer
