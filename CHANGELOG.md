@@ -8,6 +8,19 @@ the "Schema version" in your project's `agent/VERSION.md` against the dates belo
 newer than your installed version are changes you haven't applied yet. See `UPDATE_PROMPT.md`
 for the update procedure.
 
+## 2026-07-08
+
+- **`full/agent/agents/`: added 3 blank agent role templates** — `frontend-dev`, `infra`,
+  `data-eng` — alongside the existing `backend-dev` worked example. Each ships a `<name>.md`
+  definition file and a `<name>/` state folder (`STATUS.md`, `MEMORY.md`, `PROJECT_MAP.md`,
+  `RULES.md`), all blank/generic with the `<!-- REPLACE WITH YOUR STACK -->` marker in
+  `PROJECT_MAP.md` — no Acme Notes content, unlike `backend-dev`.
+- **`INSTALL_PROMPT.md`: new Step 2.5 — "Choose which agents to install" (Advanced Mode only).**
+  The installer now explicitly asks the user which of the 4 bundled agents (or a custom domain)
+  to install, instead of only ever handling `backend-dev`. Default recommendation is still to
+  install none and grow into agents organically — this is an opt-in for users who already know
+  their domain boundaries at install time.
+
 ## 2026-07-07
 
 - **`full/`: consolidated the install target into a single `agent/` folder.** Previously,

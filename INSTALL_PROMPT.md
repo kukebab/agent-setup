@@ -87,6 +87,21 @@ Based on Step 1, recommend a mode:
 
 State your recommendation, ask the user to confirm or override.
 
+### Step 2.5 — Choose which agents to install (Advanced Mode only)
+
+`full/agent/agents/` ships 4 ready-to-install role templates:
+
+- **`backend-dev`** — the worked example (filled in for the fictional Acme Notes project, Next.js + Postgres). Useful as a reference for what a filled-in agent looks like; stack-specific parts are still Acme's until you customize them.
+- **`frontend-dev`**, **`infra`**, **`data-eng`** — blank templates (no example content, just the `<!-- REPLACE WITH YOUR STACK -->` structure).
+
+Ask the user explicitly: **"Which of these domain agents do you want installed — backend-dev, frontend-dev, infra, data-eng, none of them, or a different domain name?"**
+
+- **Default recommendation if the user is unsure: install none yet.** The pattern's default is to grow into agents organically as domain ownership becomes clear (see `agent/agents/README.md` § "When to add an agent") — don't pre-create agents just because they're available.
+- Installing one or more upfront is the right call if the user already has clear domain boundaries (existing multi-person team, established backend/frontend split, etc.) — this is the exception, not the default.
+- If the user names a domain that isn't one of the 4 bundled templates (e.g. "mobile-dev", "security"), that's fine — build it from the `backend-dev.md`/`backend-dev/` structure per `agent/agents/README.md` § "Adding your own agent", blank (not Acme-filled) like the other blank templates.
+
+For each agent selected, in Step 4 you will: copy its `<name>.md` definition file, copy its `<name>/` state folder (`STATUS.md`, `MEMORY.md`, `PROJECT_MAP.md`, `RULES.md`), customize both, and add a row for it to `agent/AGENTS.md`'s "Agent dispatch" table.
+
 ### Step 3 — Plan the install
 
 Show the user a concrete plan before any file action:
@@ -115,7 +130,7 @@ Files to install (Simple Mode — paths at project root):
   - agent/memory/{wiki,daily,outputs,raw}/
   - agent/rules/ (behavioral policies)
   - agent/skills/ (reusable workflows, incl. review-learnings + mine-learnings)
-  - agent/agents/<role>/ (4-file state per domain agent)
+  - agent/agents/<selected-agents>.md + agent/agents/<selected-agents>/ (4-file state per agent chosen in Step 2.5 — may be none)
   - agent/hooks/ (session-start, commit-memory-reminder)
   - agent/scripts/context.sh, agent/scripts/mine_learnings.py (+ tests), agent/scripts/git-hooks/
   - AGENTS.md, CLAUDE.md (root) — thin stubs pointing at agent/AGENTS.md
@@ -132,7 +147,8 @@ Project-specific customization I'll do:
   - Replace Acme Notes priorities in STATE.md with: [your priorities]
   - Replace Acme example wiki with: [your topics, or empty wiki/ ready for ingest]
   [Advanced only:]
-  - Replace example backend-dev PROJECT_MAP with: [your stack]
+  - Agents to install: [none | backend-dev | frontend-dev | infra | data-eng | custom: <name>] (from Step 2.5)
+  - Replace each installed agent's PROJECT_MAP with: [your stack]
 
 Proceed?
 ```
@@ -183,16 +199,22 @@ For each file in the chosen mode:
 - **Simple Mode:** these ARE the full schema. Change line 1 title from `# Acme Notes — AI Agent Schema (...)` to `# <project-name> — AI Agent Schema (...)`, and search the body for any other "Acme Notes" mentions to remove or replace with the project name. Both files have identical content — keep them in sync.
 - **Advanced Mode:** the root `AGENTS.md`/`CLAUDE.md` are thin stubs — leave their content as-is (they just point at `agent/AGENTS.md`), no per-project customization needed. The actual schema customization happens in **`agent/AGENTS.md`**: change line 1 title the same way, search its body for "Acme Notes" mentions, and keep it as the single canonical copy — there is no `agent/CLAUDE.md` to sync separately.
 
-**`agent/agents/backend-dev.md` (Advanced only):**
-- Update the `description:` frontmatter field — currently says "for Acme Notes", replace with "for <project-name>" or just "for this project"
-- The system prompt now references `PROJECT_MAP.md` generically (no hardcoded Acme paths) — usually no edit needed, just verify
+**For each agent selected in Step 2.5 (Advanced only) — copy and customize its `<name>.md` + `<name>/` folder:**
+
+- Copy `agent/agents/<name>.md` and `agent/agents/<name>/` (all 4 state files) from the source repo
+- If the requested domain isn't one of the 4 bundled templates, build it from `backend-dev.md`/`backend-dev/` per `agent/agents/README.md` § "Adding your own agent" — blank, not Acme-filled
+- Add a row for it to `agent/AGENTS.md`'s "Agent dispatch" table
+
+**`<name>.md`:**
+- Update the `description:` frontmatter field — for `backend-dev` it currently says "for Acme Notes", replace with "for <project-name>" or just "for this project" (the 3 blank templates are already generic — verify, don't assume)
+- The system prompt references `PROJECT_MAP.md` generically (no hardcoded Acme paths in any of the 4 templates) — usually no edit needed, just verify
 - If renaming the agent (e.g. `backend-dev` → `backend` or `api-eng`), rename the `.md` file AND the state folder
 
-**`agent/agents/backend-dev/` state folder (Advanced only):**
-- `PROJECT_MAP.md` — REPLACE with the user's actual stack and directory structure (this is critical; the source's `<!-- REPLACE WITH YOUR STACK -->` marker tells you exactly where)
-- `STATUS.md` — clear all Acme entries; write one fresh event line: `Agent created YYYY-MM-DD via agent-os install`
-- `MEMORY.md` — empty out Acme gotchas; leave header + "Empty until non-obvious gotchas are discovered."
-- `RULES.md` — review each rule. Generic rules (like "production migrations during low-traffic windows") apply universally; project-specific ones may need to be adapted. If you see leftover specifics from the bundled example, fix them.
+**`<name>/` state folder:**
+- `PROJECT_MAP.md` — REPLACE with the user's actual stack and directory structure (this is critical; the `<!-- REPLACE WITH YOUR STACK -->` marker tells you exactly where — every bundled template has one, not just backend-dev)
+- `STATUS.md` — for `backend-dev`: clear all Acme entries; write one fresh event line: `Agent created YYYY-MM-DD via agent-os install`. For the blank templates: replace the `YYYY-MM-DD` placeholders with today's date, keep "No events yet."
+- `MEMORY.md` — for `backend-dev`: empty out Acme gotchas, leave header + "Empty until non-obvious gotchas are discovered." The blank templates are already in this state — verify, don't duplicate the note.
+- `RULES.md` — review each rule. Generic rules (like "production migrations during low-traffic windows") apply universally; project-specific ones may need to be adapted. For `backend-dev`, fix any leftover Acme specifics; the blank templates' starter rules are already generic but still worth a sanity check against the user's actual stack.
 
 **`agent/rules/identity.md.template` and `language.md.template`:**
 - Leave as templates (don't rename to `.md`) unless user explicitly asks
@@ -291,7 +313,7 @@ Next:
   [Advanced:]
   5. Optional: rename agent/rules/identity.md.template → identity.md to define your AI's persona
   6. Optional: rename agent/memory/USER.md.template → USER.md to add personal context
-  7. Optional: customize agent/agents/<role>/PROJECT_MAP.md to match your code structure
+  7. [If any agents installed] Double-check agent/agents/<name>/PROJECT_MAP.md matches your actual code structure
   8. To pull in future updates to this pattern, paste UPDATE_PROMPT.md into your AI later
 ```
 
@@ -322,6 +344,7 @@ The user is in charge. If they say:
 - "Skip the wiki" → skip the wiki
 - "I don't want adapters for Cursor" → skip cursor adapter
 - "Use a different agent name than backend-dev" → rename
+- "I don't want any agents yet" → skip Step 2.5 entirely, install none
 - "I don't want git hooks" → skip Step 7
 
 The pattern is modular. Components are independent.
@@ -334,7 +357,7 @@ STOP. Ask the user. Examples of things to ask:
 - "Who are your key clients or customers?" (for `projects/` if Advanced)
 - "What are your top 3 priorities right now?" (for STATE.md)
 - "Your preferred response language?" (for language.md template)
-- "Do you want me to keep the example backend-dev agent, or skip it?"
+- "Which agents do you want installed — backend-dev, frontend-dev, infra, data-eng, none, or something else?" (Step 2.5)
 
 Don't guess. The cost of asking is 30 seconds. The cost of guessing wrong is restarting.
 

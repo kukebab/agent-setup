@@ -113,8 +113,8 @@ your-project/
     │   ├── testing.md, file-size-triggers.md, cost-aware-llm.md
     │   ├── identity.md.template  ← give your AI a persona
     │   └── language.md.template  ← communication preferences
-    ├── agents/              ← domain specialists with persistent state
-    │   └── backend-dev/
+    ├── agents/              ← domain specialists with persistent state — install-time prompt asks which to include
+    │   └── backend-dev/          ← the worked example; frontend-dev/, infra/, data-eng/ also ship as blank templates
     │       ├── STATUS.md         ← events log
     │       ├── MEMORY.md         ← long-term gotchas
     │       ├── PROJECT_MAP.md    ← code map (REPLACE WITH YOUR STACK)

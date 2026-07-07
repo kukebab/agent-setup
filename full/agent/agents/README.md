@@ -13,11 +13,13 @@ A single AI agent works fine for small projects. As complexity grows, splitting 
 
 ## When to add an agent
 
-Don't pre-create agents. Add one when:
+Default to not pre-creating agents. Add one when:
 
 - You've done 3+ tasks in the same domain
 - A clear "owner area" emerges (frontend, backend, infra, data, etc.)
 - Cross-domain context-switching is costing you time
+
+Exception: if you already know your project has clear domain boundaries at install time (an existing multi-person team, an established backend/frontend split), it's fine to install one or more of the bundled templates upfront instead of waiting to grow into them — that's what the install-time "which agents do you want" prompt is for.
 
 For small projects, one main agent (no `agent/agents/` folder) is fine.
 
@@ -32,14 +34,21 @@ Each agent is defined by:
   - `PROJECT_MAP.md` — where the code lives, file responsibilities. Updated on structural changes.
   - `RULES.md` — hard rules: always-do / never-do, with reasoning. Rare additions.
 
-## Example included
+## Bundled templates
 
-- **`backend-dev.md`** + **`backend-dev/`** — backend specialist for the Acme Notes example. Stack: Next.js + Postgres (clearly marked `<!-- REPLACE WITH YOUR STACK -->` in PROJECT_MAP).
+Four ready-to-install role templates ship here. Pick the ones that match your project — installers ask which of these you want (see `INSTALL_PROMPT.md`).
 
-## Adding your own agent
+- **`backend-dev.md`** + **`backend-dev/`** — the one **worked example**, filled in for the fictional Acme Notes project (Next.js + Postgres). Stack-specific paths clearly marked `<!-- REPLACE WITH YOUR STACK -->` in PROJECT_MAP — use it to see what a filled-in agent looks like, then replace the specifics.
+- **`frontend-dev.md`** + **`frontend-dev/`** — blank template. UI components, client-side state, styling, frontend routing.
+- **`infra.md`** + **`infra/`** — blank template. CI/CD, deploy pipelines, environment config, observability.
+- **`data-eng.md`** + **`data-eng/`** — blank template. ETL/pipelines, analytics schemas, data warehouse.
 
-1. Pick a clear scope (e.g. `frontend-dev`, `data-eng`, `infra`)
-2. Copy `backend-dev.md` and `backend-dev/` as a template
+The three blank templates have no example content — their `PROJECT_MAP.md` has the `<!-- REPLACE WITH YOUR STACK -->` marker and placeholder paths, and `STATUS.md`/`MEMORY.md`/`RULES.md` start empty.
+
+## Adding your own agent (not in the bundled list)
+
+1. Pick a clear scope (e.g. `mobile-dev`, `security`)
+2. Copy `backend-dev.md` and `backend-dev/` (or any bundled template) as a starting point
 3. Adapt the system prompt and project map to your domain
 4. Reference the new agent from your main schema (`AGENTS.md`) under "Agent routing"
 
