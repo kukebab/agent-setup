@@ -7,16 +7,17 @@ alwaysApply: true
 
 This project uses the agent-os pattern. Read these at session start:
 
-- @AGENTS.md — canonical schema (memory protocol, agent dispatch, rules table)
-- @memory/STATE.md — current priorities and blockers
-- @memory/learnings/mistakes.md — past mistakes (don't repeat) and patterns
+- @AGENTS.md — thin stub, points to the full schema
+- @agent/AGENTS.md — canonical schema (memory protocol, agent dispatch, rules table)
+- @agent/memory/STATE.md — current priorities and blockers
+- @agent/memory/learnings/mistakes.md — past mistakes (don't repeat) and patterns
 
 Then, based on the task, read on demand:
 
-- @memory/wiki/INDEX.md → relevant wiki pages
-- @memory/projects/*.md if a client task
-- @agent-os/rules/<rule>.md when behavior is in question
+- @agent/memory/wiki/INDEX.md → relevant wiki pages
+- @agent/memory/projects/*.md if a client task
+- @agent/rules/<rule>.md when behavior is in question
 
-Do not duplicate the schema content here. AGENTS.md is the source of truth.
+Do not duplicate the schema content here. agent/AGENTS.md is the source of truth.
 
-When in doubt about how to behave: read AGENTS.md first.
+When in doubt about how to behave: read agent/AGENTS.md first.

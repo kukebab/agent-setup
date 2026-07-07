@@ -25,11 +25,11 @@ The pattern is his. The packaging is one way to use it on real projects.
 |---|---|---|
 | Files | 18 | ~60 |
 | Memory | single `memory/learnings.md` (MISTAKES / WINS / PATTERNS in one file) | `memory/learnings/` split by lifecycle (`mistakes` / `patterns` / `decisions` / `constraints` / `archive`) + `inbox/` candidate queue |
-| Includes | `memory/`, `AGENTS.md`/`CLAUDE.md`, 5 core skills (`morning`, `endday`, `ingest`, `lint`, `review-learnings`) | + more skills incl. **`/mine-learnings`** (trace → learnings loop), `agent-os/{rules,agents,hooks}/`, `adapters/`, `scripts/` (incl. `mine_learnings.py` + tests) |
+| Includes | `memory/`, `AGENTS.md`/`CLAUDE.md`, 5 core skills (`morning`, `endday`, `ingest`, `lint`, `review-learnings`) | Everything under one `agent/` folder: `agent/{memory,rules,skills,agents,hooks,scripts}/`, plus root `AGENTS.md`/`CLAUDE.md` stubs, `adapters/`, and **`/mine-learnings`** (trace → learnings loop) |
 | Best for | Solo + 1–2 collaborators, getting started, personal knowledge wiki | Multi-person, multi-domain, governance needed |
 | Setup time | 5 min (copy + adapt) | 15 min (`install.sh` + adapt) |
 
-Both build on the same foundation. **Start Simple, graduate to Advanced when you outgrow it** — just copy `full/agent-os/` over your starter setup. The single `learnings.md` becomes the `learnings/` directory once it outgrows one file.
+Both build on the same foundation. **Start Simple, graduate to Advanced when you outgrow it** — just copy `full/agent/` over your starter setup. The single `learnings.md` becomes the `learnings/` directory once it outgrows one file.
 
 ## Install
 
@@ -46,7 +46,7 @@ git clone https://github.com/bruceorchestrator/agent-os-starter
 cd /path/to/your-project/
 
 # Advanced Mode (recommended for real projects)
-bash /path/to/agent-os-starter/full/scripts/install.sh
+bash /path/to/agent-os-starter/full/install.sh
 
 # Or Simple Mode (just copy starter/ into your project)
 cp -R /path/to/agent-os-starter/starter/. /path/to/your-project/
@@ -59,8 +59,8 @@ See [`INSTALL.md`](INSTALL.md) for the full manual walkthrough.
 Each piece is independent:
 
 - Want only the wiki pattern? → copy `starter/memory/` + `starter/AGENTS.md`
-- Want only the rules? → copy `full/agent-os/rules/`
-- Want only the staleness check? → copy `full/scripts/git-hooks/`
+- Want only the rules? → copy `full/agent/rules/`
+- Want only the staleness check? → copy `full/agent/scripts/git-hooks/`
 
 ## When to use which mode
 
@@ -80,6 +80,14 @@ Either way, the foundation is the same Karpathy wiki. Advanced just adds discipl
 ## Tour
 
 See [`EXAMPLE_TOUR.md`](EXAMPLE_TOUR.md) — 5-minute walkthrough of the fictional Acme Notes example, showing what changes for you day-to-day after the install.
+
+## Updating an existing install
+
+Advanced Mode installs are versioned: `agent/VERSION.md` records the schema version you're on,
+and [`CHANGELOG.md`](CHANGELOG.md) tracks dated changes to the pattern itself. To pull in
+updates after this repo evolves, paste [`UPDATE_PROMPT.md`](UPDATE_PROMPT.md) into your AI agent
+— it diffs your installed version against the changelog and walks you through what changed and
+what to apply, without touching your live project memory.
 
 ## What this is NOT
 

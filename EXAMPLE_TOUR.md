@@ -85,25 +85,27 @@ starter/
 ## Tour by file (Advanced Mode)
 
 ```
-full/
-├── AGENTS.md                ← schema (router, not a rule dump)
-├── CLAUDE.md                ← mirror
-├── memory/                  ← like starter/, plus:
-│   ├── INDEX.md             ← top-level navigation
-│   ├── USER.md.template     ← optional personal context
-│   ├── learnings/           ← single learnings.md split by lifecycle:
-│   │   ├── mistakes.md      ← the hot file (read every session)
-│   │   ├── patterns.md · decisions.md · constraints.md
-│   │   └── archive.md       ← stale lessons + wins (not auto-loaded)
-│   ├── inbox/               ← /mine-learnings candidate queue
-│   │   └── learnings-candidates.md
-│   ├── projects/            ← per-project / per-client live state
-│   │   ├── bluefin-coffee.md
-│   │   └── tessera-studio.md
-│   └── outputs/
-│       ├── specs/2026-05-03_pdf-export-mvp.md
-│       └── research/2026-04-22_crdt-libraries-comparison.md
-└── agent-os/
+your-project/
+├── AGENTS.md                ← thin stub, points at agent/AGENTS.md
+├── CLAUDE.md                ← mirror stub
+└── agent/                   ← everything lives here, one folder
+    ├── AGENTS.md            ← canonical schema (router, not a rule dump)
+    ├── VERSION.md           ← installed schema version, for updates
+    ├── memory/              ← like starter/, plus:
+    │   ├── INDEX.md             ← top-level navigation
+    │   ├── USER.md.template     ← optional personal context
+    │   ├── learnings/           ← single learnings.md split by lifecycle:
+    │   │   ├── mistakes.md      ← the hot file (read every session)
+    │   │   ├── patterns.md · decisions.md · constraints.md
+    │   │   └── archive.md       ← stale lessons + wins (not auto-loaded)
+    │   ├── inbox/               ← /mine-learnings candidate queue
+    │   │   └── learnings-candidates.md
+    │   ├── projects/            ← per-project / per-client live state
+    │   │   ├── bluefin-coffee.md
+    │   │   └── tessera-studio.md
+    │   └── outputs/
+    │       ├── specs/2026-05-03_pdf-export-mvp.md
+    │       └── research/2026-04-22_crdt-libraries-comparison.md
     ├── rules/               ← 9 behavioral policies (auto-loaded)
     │   ├── quality-gate.md       ← THE most valuable rule
     │   ├── agent-quality.md      ← agent dispatch + memory loop scaling
@@ -122,14 +124,17 @@ full/
     │   ├── review-learnings, mine-learnings   ← learnings lifecycle + trace→learnings loop
     │   ├── create-spec, call-debrief, web-researcher
     │   └── create, swarm
-    └── hooks/               ← runtime enforcement
-        ├── session-start.sh
-        └── commit-memory-reminder.sh
+    ├── hooks/               ← runtime enforcement
+    │   ├── session-start.sh
+    │   └── commit-memory-reminder.sh
+    └── scripts/             ← governance + tooling
+        ├── context.sh, mine_learnings.py (+ tests)
+        └── git-hooks/       ← staleness check at commit time
 ```
 
-Plus `adapters/` for tool-specific wiring (Cursor, Aider, Windsurf) and `scripts/` for governance (staleness check at commit time, `install.sh`, `mine_learnings.py` + tests).
+Plus `adapters/` in the source repo for tool-specific wiring (Cursor, Aider, Windsurf) — those write outside `agent/`, into whatever path each tool auto-loads.
 
-**~60 files total.** More moving parts, but each piece earns its place.
+**~60 files total**, all under one `agent/` folder. More moving parts than Simple Mode, but each piece earns its place, and nothing is scattered across your project root.
 
 ---
 

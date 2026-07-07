@@ -25,7 +25,7 @@ Each adapter here is a thin shim that says "read AGENTS.md/CLAUDE.md for the sch
 
 ## Wiring up
 
-Run `bash scripts/install.sh` — it detects your tool and copies the right adapter into place.
+Run `bash install.sh` (from the `full/` directory) — it detects your tool and copies the right adapter into place.
 
 Or manually: copy the relevant adapter file into your project's expected location.
 

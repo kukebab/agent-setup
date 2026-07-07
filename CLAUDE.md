@@ -50,12 +50,18 @@ agent-os-starter/
 ├── README.md                ← human-facing pitch
 ├── INSTALL.md               ← human manual install
 ├── INSTALL_PROMPT.md        ← THE killer file — paste-into-AI installer
+├── UPDATE_PROMPT.md         ← paste-into-AI updater for existing installs
+├── CHANGELOG.md             ← dated log of changes to the pattern itself
 ├── EXAMPLE_TOUR.md          ← walkthrough of Acme Notes example
 ├── AGENTS.md                ← this file
 ├── CLAUDE.md                ← mirror of this file
 ├── LICENSE                  ← MIT
 ├── starter/                 ← Simple Mode template (12 files, Acme Notes example)
-└── full/                    ← Advanced Mode template (~50 files, Acme Notes example)
+└── full/                    ← Advanced Mode template (~60 files, Acme Notes example)
+    ├── AGENTS.md / CLAUDE.md    ← thin root stubs, copied to target project root
+    ├── install.sh               ← installer (not copied into target)
+    ├── adapters/                ← tool-specific shims (Cursor, Aider, Windsurf)
+    └── agent/                   ← the whole bundle, copied wholesale to target's agent/
 ```
 
 `starter/` and `full/` ARE the worked Acme Notes example — no separate `examples/` directory. Both modes contain the same fictional project at different complexity levels.
@@ -67,7 +73,7 @@ Refer them to:
 - `README.md` — high-level pitch + credits
 - `EXAMPLE_TOUR.md` — what it does day-to-day
 - `starter/AGENTS.md` — Simple Mode example schema (the schema users actually copy)
-- `full/AGENTS.md` — Advanced Mode example schema (richer)
+- `full/agent/AGENTS.md` — Advanced Mode example schema (richer). `full/AGENTS.md` at the repo root is just a thin stub pointing at it — don't confuse the two.
 
 Do not paraphrase those files inline — point at them.
 
@@ -87,8 +93,9 @@ Edit files in `starter/`, `full/`, `adapters/` as appropriate. Before committing
 
 1. Run scrub grep (above)
 2. If you changed `install.sh` or `check-staleness.py`, test on a fake project structure
-3. If you changed schema in `starter/AGENTS.md` or `full/AGENTS.md`, sync the corresponding `CLAUDE.md` mirror
+3. If you changed schema in `starter/AGENTS.md`, sync the corresponding `starter/CLAUDE.md` mirror. For `full/`, the canonical schema is `full/agent/AGENTS.md` (no mirror to keep in sync); only the tiny root stubs `full/AGENTS.md` / `full/CLAUDE.md` need to stay identical to each other.
 4. If you added a new rule, skill, or agent — update the relevant `README.md` index
+5. If the change is user-visible (new file, moved path, changed behavior), add a dated entry to `CHANGELOG.md`
 
 ## Conventions
 
@@ -103,8 +110,8 @@ Edit files in `starter/`, `full/`, `adapters/` as appropriate. Before committing
 - Don't add a `memory/` directory at the repo root (would conflict with installs)
 - Don't add a `.claude/` directory at repo root (same reason)
 - Don't bake a specific stack into `starter/` or schema files — only the example `backend-dev` agent in `full/` may have stack-specific paths, and only with the `<!-- REPLACE WITH YOUR STACK -->` marker
-- Don't add rules with names matching personal patterns to `agent-os/rules/` — keep them universal
-- Don't merge changes that would expand `full/AGENTS.md` past ~250 lines — it's a router, not a rule dump (full content lives in `agent-os/rules/`)
+- Don't add rules with names matching personal patterns to `full/agent/rules/` — keep them universal
+- Don't merge changes that would expand `full/agent/AGENTS.md` past ~250 lines — it's a router, not a rule dump (full content lives in `full/agent/rules/`)
 
 ## License
 
