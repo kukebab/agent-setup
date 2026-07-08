@@ -47,6 +47,7 @@ The installer:
 - Asks before overwriting any existing files (default = skip)
 - Copies the whole `agent/` bundle (`memory/`, `rules/`, `skills/`, `hooks/`, `agents/`, `scripts/`) plus `adapters/`
 - Drops thin `AGENTS.md`/`CLAUDE.md` stubs at your project root pointing at `agent/AGENTS.md`
+- **Claude Code only:** additionally copies `agent/skills/<name>/` → `.claude/skills/<name>/` and `agent/agents/<name>.md` → `.claude/agents/<name>.md`, so skills and subagents are natively discoverable by Claude Code, not just readable via `AGENTS.md`
 - Wires git hooks for the staleness check
 - Stamps `agent/VERSION.md` with the installed schema version
 - Prints next-step verification
@@ -80,7 +81,7 @@ Replace those with your stack. Everything else (rules, skills, hooks, schema) is
 
 | Tool | Auto-loaded | Extra files |
 |---|---|---|
-| Claude Code | `CLAUDE.md` (stub, points at `agent/AGENTS.md`) | optional: `.claude/settings.json` for hooks (template in `agent/hooks/README.md`) |
+| Claude Code | `CLAUDE.md` (stub, points at `agent/AGENTS.md`) | `install.sh` also copies each `agent/skills/<name>/` into `.claude/skills/<name>/` and each `agent/agents/<name>.md` into `.claude/agents/<name>.md`, so Claude Code auto-discovers them as native skills/subagents (not just prose in `AGENTS.md`); optional: `.claude/settings.json` for hooks (template in `agent/hooks/README.md`) |
 | Codex / OpenCode | `AGENTS.md` (stub, points at `agent/AGENTS.md`) | none |
 | Cursor | `.cursor/rules/main.mdc` (manual or via `install.sh`) | references `agent/AGENTS.md` |
 | Aider | `CONVENTIONS.md` (manual or via `install.sh`) | also `aider --read AGENTS.md` |
@@ -104,6 +105,9 @@ The staleness check fired. Two paths:
 **Multiple AI tools open in the same project**
 Fine. They all read markdown; the schema is identical. Each tool picks its own auto-load file.
 
+**Claude Code doesn't see my skills/subagents as `/slash-commands` or dispatchable agents**
+Reading `AGENTS.md`/`CLAUDE.md` is not enough — Claude Code only auto-discovers skills from `.claude/skills/<name>/SKILL.md` and subagents from `.claude/agents/<name>.md`. `install.sh` copies these automatically for Claude Code; if you installed manually or edited a skill/agent under `agent/` afterward, re-copy it into the matching `.claude/skills/` or `.claude/agents/` path.
+
 **Existing `agent/` directory at install time**
 The installer asks: skip / merge (only new files) / backup-and-replace. Default is skip. Your existing notes are sacred.
 
@@ -118,6 +122,7 @@ changed.
 ```bash
 rm -rf agent/ AGENTS.md CLAUDE.md
 # Plus tool-specific adapter files if you wired them
+rm -rf .claude/skills .claude/agents  # Claude Code only, if install.sh copied these
 git config --unset core.hooksPath  # if you set it
 ```
 

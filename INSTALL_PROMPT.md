@@ -135,6 +135,9 @@ Files to install (Simple Mode — paths at project root):
   - agent/scripts/context.sh, agent/scripts/mine_learnings.py (+ tests), agent/scripts/git-hooks/
   - AGENTS.md, CLAUDE.md (root) — thin stubs pointing at agent/AGENTS.md
   - adapters/<your-tool>/ (written outside agent/, wherever your tool auto-loads from)
+  [Claude Code only:]
+  - .claude/skills/<name>/ — copy of each agent/skills/<name>/ (or agent-os/skills/<name>/ in Simple Mode), so Claude Code auto-discovers them as native skills
+  - .claude/agents/<name>.md — copy of each installed agent/agents/<name>.md (Advanced only), so Claude Code auto-discovers them as native subagents
 
 Files I'll preserve (won't touch):
   - [list anything pre-existing that I'll leave alone]
@@ -207,8 +210,8 @@ For each file in the chosen mode:
 
 **`<name>.md`:**
 - Update the `description:` frontmatter field — for `backend-dev` it currently says "for Acme Notes", replace with "for <project-name>" or just "for this project" (the 3 blank templates are already generic — verify, don't assume)
-- The system prompt references `PROJECT_MAP.md` generically (no hardcoded Acme paths in any of the 4 templates) — usually no edit needed, just verify
-- If renaming the agent (e.g. `backend-dev` → `backend` or `api-eng`), rename the `.md` file AND the state folder
+- The system prompt references `PROJECT_MAP.md` by its full path from project root (`agent/agents/<name>/PROJECT_MAP.md`) — no hardcoded Acme paths in any of the 4 templates, usually no edit needed, just verify
+- If renaming the agent (e.g. `backend-dev` → `backend` or `api-eng`), rename the `.md` file AND the state folder, AND update every `agent/agents/backend-dev/` path reference inside the `.md` (the `state-folder:` frontmatter, the "State files" section, and the system prompt's PROJECT_MAP line) to the new name — these are full paths, not symlinks, so they don't update themselves
 
 **`<name>/` state folder:**
 - `PROJECT_MAP.md` — REPLACE with the user's actual stack and directory structure (this is critical; the `<!-- REPLACE WITH YOUR STACK -->` marker tells you exactly where — every bundled template has one, not just backend-dev)
@@ -229,6 +232,12 @@ For each file in the chosen mode:
 - Set `Schema version:` to the newest dated entry in the source repo's `CHANGELOG.md`
 - Set `Installed:` and `Last synced:` to today's date
 - This is what a future `UPDATE_PROMPT.md` run will diff against — don't skip it
+
+**`.claude/skills/` and `.claude/agents/` (Claude Code only):**
+- Claude Code auto-discovers skills from `.claude/skills/<name>/SKILL.md` and subagents from `.claude/agents/<name>.md` — reading `AGENTS.md`/`CLAUDE.md` alone is not enough for those to show up as native `/slash-commands` or dispatchable subagents.
+- Copy every `agent/skills/<name>/` (Simple Mode: `agent-os/skills/<name>/`) into `.claude/skills/<name>/` — same `SKILL.md` content, just duplicated at the path Claude Code scans. Skip `skills/README.md` (it's an index, not a skill).
+- For each agent installed in Step 2.5 (Advanced only), copy its `agent/agents/<name>.md` definition file into `.claude/agents/<name>.md`. Do NOT copy `agent/agents/README.md` or the `<name>/` state folders — Claude Code only reads the single `.md` definition from `.claude/agents/`, the state folder stays under `agent/agents/<name>/` where the agent's own system prompt points it.
+- These are copies, not symlinks — if you later rename or edit a skill/agent under `agent/`, re-copy into `.claude/` to keep them in sync. Mention this in the final summary.
 
 **Final cleanup after install — run a residue check:**
 
@@ -261,7 +270,7 @@ Detect from Step 1 which AI tool the user has, and wire the appropriate adapter:
 
 | Tool detected | Action |
 |---|---|
-| Claude Code (`.claude/` or CLAUDE.md present) | `CLAUDE.md` at root is enough (Advanced: it's a stub pointing at `agent/AGENTS.md`); suggest `.claude/settings.json` hook config (see `agent/hooks/README.md`) |
+| Claude Code (`.claude/` or CLAUDE.md present) | `CLAUDE.md` at root is enough for the AI to *read* the schema (Advanced: it's a stub pointing at `agent/AGENTS.md`) — but Claude Code also natively auto-discovers skills and subagents from specific folders, so additionally: copy each `agent/skills/<name>/` (Simple: `agent-os/skills/<name>/`) into `.claude/skills/<name>/`, and copy each installed `agent/agents/<name>.md` (Advanced only — skip `README.md`) into `.claude/agents/<name>.md`. This makes `/morning`, `/endday`, `backend-dev`, etc. available as first-class Claude Code skills/subagents, not just prose inside AGENTS.md. Also suggest `.claude/settings.json` hook config (see `agent/hooks/README.md`) |
 | Codex / OpenCode (`.codex/` or AGENTS.md present) | `AGENTS.md` at root is enough |
 | Cursor (`.cursor/` present) | Also create `.cursor/rules/main.mdc` (copy from `adapters/cursor/`) |
 | Aider (`.aider.conf.yml` present) | Also create `CONVENTIONS.md` (copy from `adapters/aider/`) |
@@ -304,6 +313,7 @@ Verification:
   ✓ scripts/context.sh runs cleanly [Advanced: agent/scripts/context.sh]
   ✓ AGENTS.md at root, AI should auto-load on next session [Advanced: it's a stub pointing at agent/AGENTS.md]
   [Advanced: ✓ git hooks wired, ✓ agent/VERSION.md stamped]
+  [Claude Code: ✓ skills copied to .claude/skills/, ✓ agents copied to .claude/agents/ (if any installed)]
 
 Next:
   1. Open the project in your AI tool — verify AGENTS.md is auto-loaded

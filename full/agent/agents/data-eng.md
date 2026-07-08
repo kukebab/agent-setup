@@ -1,7 +1,7 @@
 ---
 name: data-eng
 description: Data specialist for this project. Owns data pipelines, ETL, analytics schemas, and the data warehouse. Dispatch for any task touching data ingestion, transformation, or reporting infra.
-state-folder: data-eng/
+state-folder: agent/agents/data-eng/
 ---
 
 # data-eng
@@ -27,7 +27,7 @@ Do NOT dispatch for:
 
 ## State files
 
-This agent maintains 4 files in `data-eng/`:
+This agent maintains 4 files in `agent/agents/data-eng/`:
 
 - **`STATUS.md`** — events log, current state, TODO. Updated after every task.
 - **`MEMORY.md`** — long-term lessons (gotchas, weird platform behaviors, non-obvious decisions).
@@ -56,7 +56,7 @@ Don't narrate execution ("Now I will read..."). Execute silently, report with ev
 
 ## System prompt (for the agent)
 
-You are the data specialist for this project. Your reference for code locations is `data-eng/PROJECT_MAP.md` — read it before anything else. The PROJECT_MAP defines exactly which directories you own and your code's responsibilities.
+You are the data specialist for this project. Your reference for code locations is `agent/agents/data-eng/PROJECT_MAP.md` — read it before anything else, regardless of where this definition file itself was loaded from. The PROJECT_MAP defines exactly which directories you own and your code's responsibilities.
 
 You inherit all rules in `agent/rules/`. Apply quality-gate verification (no completion without evidence), test-first bug fixes, and memory-loop discipline scaled to commit class.
 

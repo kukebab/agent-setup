@@ -10,6 +10,25 @@ for the update procedure.
 
 ## 2026-07-08
 
+- **Claude Code: skills and agents are now copied into `.claude/skills/` and `.claude/agents/`.**
+  Previously, Advanced Mode's `agent/skills/<name>/` and `agent/agents/<name>.md` were only
+  reachable by Claude Code reading `AGENTS.md`/`CLAUDE.md` as prose — they weren't visible to
+  Claude Code's native skill/subagent auto-discovery. `full/install.sh` now copies each
+  `agent/skills/<name>/` into `.claude/skills/<name>/` and each `agent/agents/<name>.md`
+  (excluding `README.md`) into `.claude/agents/<name>.md` when Claude Code is detected.
+  `INSTALL_PROMPT.md` and `INSTALL.md` document the same step for AI-driven and manual installs.
+  Also fixed a latent bug in `install.sh`'s `copy_dir_safe` helper that failed when the
+  destination's parent directory didn't exist yet (surfaced by this change).
+- **Fixed broken state-folder references in the 4 bundled agent templates.** Each
+  `agent/agents/<name>.md` referenced its state folder with a bare relative path
+  (`state-folder: backend-dev/`, `` `backend-dev/PROJECT_MAP.md` ``, etc.). That only resolved
+  correctly when the `.md` was read from inside `agent/agents/` — it broke for the copy now placed
+  at `.claude/agents/<name>.md` (previous entry), which has no `agent/agents/` context to resolve
+  against. All 4 templates (`backend-dev`, `frontend-dev`, `infra`, `data-eng`) now reference their
+  state folder by full path from the project root (`agent/agents/<name>/`), so the link holds
+  regardless of which copy of the `.md` a subagent is dispatched from. The state folder itself is
+  not duplicated — it stays under `agent/agents/<name>/` as the single copy.
+
 - **`full/agent/agents/`: added 3 blank agent role templates** — `frontend-dev`, `infra`,
   `data-eng` — alongside the existing `backend-dev` worked example. Each ships a `<name>.md`
   definition file and a `<name>/` state folder (`STATUS.md`, `MEMORY.md`, `PROJECT_MAP.md`,

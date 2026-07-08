@@ -34,6 +34,11 @@ Each agent is defined by:
   - `PROJECT_MAP.md` — where the code lives, file responsibilities. Updated on structural changes.
   - `RULES.md` — hard rules: always-do / never-do, with reasoning. Rare additions.
 
+## Operating rules
+
+- **Code must be written via subagent dispatch, not by the orchestrator directly.** The main session plans and verifies; the agent (subagent) does the actual reading/writing of code. See `agent/rules/agent-quality.md` § Dispatch Rules.
+- **`PROJECT_MAP.md` is mandatory, not optional.** Check it before any Read/Grep/Glob so the agent isn't re-exploring code it already mapped, and keep it updated whenever the code structure changes (new file/module, moved responsibility). An agent with a stale or empty `PROJECT_MAP.md` is wasting tokens re-discovering what should already be recorded.
+
 ## Bundled templates
 
 Four ready-to-install role templates ship here. Pick the ones that match your project — installers ask which of these you want (see `INSTALL_PROMPT.md`).

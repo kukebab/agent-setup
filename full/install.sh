@@ -83,6 +83,7 @@ copy_dir_safe() {
     return 0
   fi
   if [ ! -d "$dst" ]; then
+    mkdir -p "$(dirname "$dst")"
     cp -R "$src" "$dst"
     echo "  Copied: $dst"
     return 0
@@ -134,6 +135,25 @@ for tool in "${detected_tools[@]}"; do
     claude-code)
       copy_file_safe "$SOURCE_ROOT/CLAUDE.md" "$TARGET_ROOT/CLAUDE.md"
       copy_file_safe "$SOURCE_ROOT/AGENTS.md" "$TARGET_ROOT/AGENTS.md"
+      # Claude Code auto-discovers skills from .claude/skills/<name>/SKILL.md and
+      # subagents from .claude/agents/<name>.md — copy them so /morning, /endday,
+      # backend-dev, etc. are native Claude Code skills/subagents, not just prose
+      # inside AGENTS.md. These are copies of agent/skills/ and agent/agents/, not
+      # symlinks; re-run this step if you edit a skill/agent under agent/ later.
+      if [ -d "$TARGET_ROOT/agent/skills" ]; then
+        for skill_dir in "$TARGET_ROOT/agent/skills"/*/; do
+          [ -d "$skill_dir" ] || continue
+          skill_name="$(basename "$skill_dir")"
+          copy_dir_safe "$skill_dir" "$TARGET_ROOT/.claude/skills/$skill_name" "skill: $skill_name"
+        done
+      fi
+      if [ -d "$TARGET_ROOT/agent/agents" ]; then
+        for agent_file in "$TARGET_ROOT/agent/agents"/*.md; do
+          [ -f "$agent_file" ] || continue
+          [ "$(basename "$agent_file")" = "README.md" ] && continue
+          copy_file_safe "$agent_file" "$TARGET_ROOT/.claude/agents/$(basename "$agent_file")"
+        done
+      fi
       ;;
     codex)
       copy_file_safe "$SOURCE_ROOT/AGENTS.md" "$TARGET_ROOT/AGENTS.md"
