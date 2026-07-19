@@ -129,6 +129,7 @@ Reusable workflows. Invoked by trigger phrase or `/skill-name`.
 | `/call-debrief` | Transcript pasted, audio dropped | Extract decisions/actions → agent/memory/outputs/call-debriefs/ |
 | `/web-researcher` | "research", "investigate", "compare" | Multi-source research → agent/memory/outputs/research/ |
 | `/create` | "make a skill", "automate this" | Bootstrap new skill or agent |
+| `/create-agent` | "create an agent", "new agent" | New domain agent, empty state files + update triggers to fill them |
 | `/swarm` | "parallel agents", "decompose" | Multi-agent task decomposition |
 | `/review-learnings` | "review learnings", file > target size | Curate `agent/memory/learnings/` — promote to patterns, archive stale |
 | `/mine-learnings` | "mine learnings", end of session | Mine the session transcript → candidate learnings into the review queue (human-approved before promotion) |

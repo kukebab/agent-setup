@@ -36,7 +36,8 @@ The descriptions in each skill's frontmatter list the trigger phrases that shoul
 
 ### Meta (agent infrastructure)
 
-- **`create/`** — bootstrap new skills or agents
+- **`create/`** — bootstrap new skills or agents (routes agent creation to `create-agent/`)
+- **`create-agent/`** — create a new domain agent with **empty** state files, plus the update triggers that fill them over time (task done, requirements clarified, wishes clearer, user asks)
 - **`swarm/`** — decompose a task into parallel subagents
 
 ## Adding your own skills

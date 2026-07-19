@@ -52,6 +52,9 @@ The three blank templates have no example content — their `PROJECT_MAP.md` has
 
 ## Adding your own agent (not in the bundled list)
 
+Run `/create-agent` (`agent/skills/create-agent/SKILL.md`) — it walks through scope, definition,
+empty state folder, and routing, and defines when the state files get updated afterwards. Or manually:
+
 1. Pick a clear scope (e.g. `mobile-dev`, `security`)
 2. Copy `backend-dev.md` and `backend-dev/` (or any bundled template) as a starting point
 3. Adapt the system prompt and project map to your domain

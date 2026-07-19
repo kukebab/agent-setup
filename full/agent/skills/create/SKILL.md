@@ -98,48 +98,9 @@ If it doesn't activate when you expect, tell me — we'll refine the description
 
 ## Procedure — creating an agent
 
-### 1. Confirm scope
-
-What does this agent own? Specifically:
-
-- Which directories? (`api/`, `frontend/`, etc.)
-- Which concerns? (deployment, testing, security, etc.)
-- What does it NOT touch?
-
-If scope is fuzzy, push back. Agents need clear boundaries.
-
-### 2. Create the definition file
-
-`agent/agents/<name>.md` — frontmatter + system prompt + dispatch rules.
-
-Use `agent/agents/backend-dev.md` as template.
-
-### 3. Create the state folder
-
-`agent/agents/<name>/` with 4 files:
-
-- `STATUS.md` — start with empty events log + first entry "Agent created YYYY-MM-DD"
-- `MEMORY.md` — empty, will fill as lessons emerge
-- `PROJECT_MAP.md` — describe the directories/files this agent owns
-- `RULES.md` — start minimal. Add hard rules as they're established.
-
-### 4. Wire into routing
-
-Update main schema (`AGENTS.md`) "Agent routing" table:
-
-```markdown
-| New domain | new-agent-name |
-```
-
-### 5. Confirm to user
-
-```
-Created agent: <name>
-Owns: [list]
-State: agent/agents/<name>/
-
-Dispatch this agent for: [domain]
-```
+Hand off to **`/create-agent`** (`agent/skills/create-agent/SKILL.md`). It covers the full lifecycle:
+scope confirmation, definition file, the empty state folder that fills as work happens, routing, and
+the triggers for keeping the agent's state and project map updated afterwards.
 
 ## Anti-patterns
 

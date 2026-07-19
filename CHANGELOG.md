@@ -8,6 +8,19 @@ the "Schema version" in your project's `agent/VERSION.md` against the dates belo
 newer than your installed version are changes you haven't applied yet. See `UPDATE_PROMPT.md`
 for the update procedure.
 
+## 2026-07-18
+
+- **Advanced Mode: new `/create-agent` skill** (`full/agent/skills/create-agent/`). Dedicated skill
+  for creating domain agents. Two ideas it encodes: (1) new agents are born **empty** — the 4 state
+  files (`STATUS.md`, `MEMORY.md`, `PROJECT_MAP.md`, `RULES.md`) start as bare skeletons and are
+  never pre-filled with speculation; (2) an explicit trigger table for filling them afterwards —
+  on user request, when a task in the agent's domain completes, when the code structure changes,
+  when general requirements get clarified, and when the user's general wishes/preferences become
+  clearer — so the agent keeps its project map and state current instead of going stale. The
+  existing `/create` meta-skill now routes agent creation to `/create-agent` instead of carrying
+  its own copy of the procedure; `agent/agents/README.md`, `agent/skills/README.md`, and the
+  skills routing table in `agent/AGENTS.md` reference the new skill.
+
 ## 2026-07-08
 
 - **Claude Code: skills and agents are now copied into `.claude/skills/` and `.claude/agents/`.**
