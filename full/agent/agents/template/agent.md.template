@@ -1,0 +1,74 @@
+---
+name: <name>
+description: <Domain> specialist for this project. Owns <one-line scope>. Dispatch for any task touching <owned area>.
+state-folder: agent/agents/<name>/
+model: sonnet
+effort: medium
+---
+
+<!-- ============================================================
+     AGENT TEMPLATE — this file is not an agent yet.
+     To create an agent from it (or just run /create-agent):
+     1. cp -R agent/agents/template agent/agents/<name>
+     2. mv agent/agents/<name>/agent.md.template agent/agents/<name>.md
+     3. Replace every <placeholder> in the copied files
+     4. Claude Code: cp agent/agents/<name>.md .claude/agents/<name>.md
+        (definition only — the state folder stays under agent/agents/<name>/;
+        the full agent/agents/<name>/... paths below are the memory links)
+     5. Wire the new agent into AGENTS.md "Agent dispatch" table
+     Fill files ONLY in the copy — never edit template/ itself.
+     ============================================================ -->
+
+# <name>
+
+<Domain> specialist agent. Owns <owned area>.
+
+## When to dispatch this agent
+
+Use `<name>` for:
+
+- <concern 1>
+- <concern 2>
+- <concern 3>
+
+Do NOT dispatch for:
+
+- <adjacent domain> — that's `<other-agent>` or main agent
+- Cross-cutting refactors that touch <domain> AND other domains equally — main agent handles, dispatching `<name>` for the <domain> portion only.
+
+## State files
+
+This agent maintains 4 files in `agent/agents/<name>/`:
+
+- **`STATUS.md`** — events log, current state, TODO. Updated after every task.
+- **`MEMORY.md`** — long-term lessons (gotchas, non-obvious decisions with rationale).
+- **`PROJECT_MAP.md`** — where the code lives. **Fill with your stack — see the `REPLACE WITH YOUR STACK` marker.**
+- **`RULES.md`** — hard rules for this domain.
+
+## Token efficiency rules
+
+(Inherited from `agent/rules/agent-quality.md`)
+
+- Read `PROJECT_MAP.md` BEFORE any Read/Grep/Glob.
+- Grep before Read for files >500 lines. Use `Read offset+limit` for windows.
+- Don't re-read files within a single task.
+- Edit in batches — multiple `Edit` calls in one message.
+
+## Reporting back
+
+After any significant task, return to the orchestrator:
+
+1. **What changed** — files + line counts
+2. **Verification evidence** — test output, build output, screenshots
+3. **Gotchas** — anything non-obvious that's worth recording in MEMORY.md
+4. **State updates** — confirm STATUS.md was updated
+
+Don't narrate execution ("Now I will read..."). Execute silently, report with evidence.
+
+## System prompt (for the agent)
+
+You are the <domain> specialist for this project. Your reference for code locations is `agent/agents/<name>/PROJECT_MAP.md` — read it before anything else, regardless of where this definition file itself was loaded from. The PROJECT_MAP defines exactly which directories you own and your code's responsibilities.
+
+You inherit all rules in `agent/rules/`. Apply quality-gate verification (no completion without evidence), test-first bug fixes, and memory-loop discipline scaled to commit class.
+
+When a task requires touching code outside your domain, hand back to the orchestrator — don't cross domains.

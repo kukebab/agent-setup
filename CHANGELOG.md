@@ -8,6 +8,44 @@ the "Schema version" in your project's `agent/VERSION.md` against the dates belo
 newer than your installed version are changes you haven't applied yet. See `UPDATE_PROMPT.md`
 for the update procedure.
 
+## 2026-07-19
+
+- **New `INSTALL_PROMPT_CLAUDE_CODE.md` — Claude Code–specific installer.** A variant of
+  `INSTALL_PROMPT.md` that skips tool detection and adapters (assumes Claude Code), installs
+  Advanced Mode only, and creates **no domain agents**: `agent/agents/template/` is copied blank
+  and stays blank — `<placeholder>` markers untouched, nothing registered in `.claude/agents/` —
+  with `/create-agent` as the only path to real agents afterwards. Skills are still copied into
+  `.claude/skills/` for native discovery. Use the general `INSTALL_PROMPT.md` for other tools,
+  Simple Mode, or install-time domain agents.
+- **Advanced Mode: the four bundled agent templates are removed.** `backend-dev` (the Acme worked
+  example), `frontend-dev`, `infra`, and `data-eng` — definition files and state folders — are gone
+  from `full/agent/agents/`. `agent/agents/template/` (next entry) is now the only thing shipping
+  there: every agent is created by copying it, at install time (INSTALL_PROMPT Step 2.5 now asks
+  "do you want any domain agents created now?" instead of offering a fixed menu) or later via
+  `/create-agent`. All references updated across `INSTALL_PROMPT.md`, `INSTALL.md`,
+  `EXAMPLE_TOUR.md`, `README`s, the `agent/AGENTS.md` dispatch table, skills, `install.sh`, and the
+  repo meta-docs (`AGENTS.md`/`CLAUDE.md`).
+- **Advanced Mode: canonical blank agent at `agent/agents/template/`.** New folder holding the
+  agent file structure as a copy source: `agent.md.template` (definition) + the 4 state files
+  (`STATUS.md`, `MEMORY.md`, `PROJECT_MAP.md`, `RULES.md`), all `<placeholder>`-marked. It is not
+  an installable agent — it ships with every Advanced install (the bundle is copied wholesale) so
+  new agents are created locally by **copy-first-then-fill**: `cp -R agent/agents/template
+  agent/agents/<name>`, move `agent.md.template` to `agent/agents/<name>.md`, then fill
+  placeholders in the copy only. `/create-agent` now mandates this flow (never write agent files
+  from scratch, never edit `template/` itself); `agent/agents/README.md` documents the folder;
+  `INSTALL_PROMPT.md` routes custom-domain agents through `template/` instead of "build from
+  `backend-dev`". `check-staleness.py` now skips `agent/agents/template/` — its `YYYY-MM-DD`
+  placeholders are by design and shouldn't produce per-commit warnings (tested on a fake project:
+  template excluded, real agents still hard-blocked on stale dates).
+- **`/create-agent` now registers the agent in both locations.** Creation ends with the definition
+  file existing twice: `agent/agents/<name>.md` (source of truth, next to the `<name>/` state
+  folder) and a copy at `.claude/agents/<name>.md` for Claude Code's native subagent discovery.
+  The skill verifies the memory links before copying — the definition must reference its state
+  files by full path from the project root (`agent/agents/<name>/STATUS.md` etc.), which is what
+  lets the `.claude/agents/` copy find its memory; the state folder itself is never duplicated.
+  The template's instruction comment and `agent/agents/README.md` § "Adding an agent" document the
+  same step.
+
 ## 2026-07-18
 
 - **Advanced Mode: new `/create-agent` skill** (`full/agent/skills/create-agent/`). Dedicated skill

@@ -39,6 +39,10 @@ Both build on the same foundation. **Start Simple, graduate to Advanced when you
 2. Paste the contents of [`INSTALL_PROMPT.md`](INSTALL_PROMPT.md) into the chat
 3. The AI inspects your project, picks Simple or Advanced, and installs the adapted version
 
+On Claude Code specifically, you can paste [`INSTALL_PROMPT_CLAUDE_CODE.md`](INSTALL_PROMPT_CLAUDE_CODE.md)
+instead — a shorter variant that skips tool detection, installs Advanced Mode with the blank agent template,
+and creates no domain agents (grow them later via `/create-agent`).
+
 ### Option B — manual
 
 ```bash

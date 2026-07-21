@@ -19,7 +19,7 @@ Default to not pre-creating agents. Add one when:
 - A clear "owner area" emerges (frontend, backend, infra, data, etc.)
 - Cross-domain context-switching is costing you time
 
-Exception: if you already know your project has clear domain boundaries at install time (an existing multi-person team, an established backend/frontend split), it's fine to install one or more of the bundled templates upfront instead of waiting to grow into them — that's what the install-time "which agents do you want" prompt is for.
+Exception: if you already know your project has clear domain boundaries at install time (an existing multi-person team, an established backend/frontend split), it's fine to create one or more agents upfront from `template/` instead of waiting to grow into them — that's what the install-time "do you want any domain agents" prompt is for.
 
 For small projects, one main agent (no `agent/agents/` folder) is fine.
 
@@ -39,26 +39,23 @@ Each agent is defined by:
 - **Code must be written via subagent dispatch, not by the orchestrator directly.** The main session plans and verifies; the agent (subagent) does the actual reading/writing of code. See `agent/rules/agent-quality.md` § Dispatch Rules.
 - **`PROJECT_MAP.md` is mandatory, not optional.** Check it before any Read/Grep/Glob so the agent isn't re-exploring code it already mapped, and keep it updated whenever the code structure changes (new file/module, moved responsibility). An agent with a stale or empty `PROJECT_MAP.md` is wasting tokens re-discovering what should already be recorded.
 
-## Bundled templates
+## The `template/` folder
 
-Four ready-to-install role templates ship here. Pick the ones that match your project — installers ask which of these you want (see `INSTALL_PROMPT.md`).
+`agent/agents/template/` is the canonical blank agent — a definition file (`agent.md.template`) plus
+the 4 state files, all with `<placeholder>` markers. It is **not** an agent itself and is never
+dispatched; it's the folder every new agent is copied from. Don't edit it when creating an agent —
+fill only the copy. It ships with the bundle at install so `/create-agent` always has it locally.
 
-- **`backend-dev.md`** + **`backend-dev/`** — the one **worked example**, filled in for the fictional Acme Notes project (Next.js + Postgres). Stack-specific paths clearly marked `<!-- REPLACE WITH YOUR STACK -->` in PROJECT_MAP — use it to see what a filled-in agent looks like, then replace the specifics.
-- **`frontend-dev.md`** + **`frontend-dev/`** — blank template. UI components, client-side state, styling, frontend routing.
-- **`infra.md`** + **`infra/`** — blank template. CI/CD, deploy pipelines, environment config, observability.
-- **`data-eng.md`** + **`data-eng/`** — blank template. ETL/pipelines, analytics schemas, data warehouse.
+## Adding an agent
 
-The three blank templates have no example content — their `PROJECT_MAP.md` has the `<!-- REPLACE WITH YOUR STACK -->` marker and placeholder paths, and `STATUS.md`/`MEMORY.md`/`RULES.md` start empty.
-
-## Adding your own agent (not in the bundled list)
-
-Run `/create-agent` (`agent/skills/create-agent/SKILL.md`) — it walks through scope, definition,
-empty state folder, and routing, and defines when the state files get updated afterwards. Or manually:
+Run `/create-agent` (`agent/skills/create-agent/SKILL.md`) — it copies `template/`, renames, fills
+placeholders, wires routing, and defines when the state files get updated afterwards. Or manually:
 
 1. Pick a clear scope (e.g. `mobile-dev`, `security`)
-2. Copy `backend-dev.md` and `backend-dev/` (or any bundled template) as a starting point
-3. Adapt the system prompt and project map to your domain
-4. Reference the new agent from your main schema (`AGENTS.md`) under "Agent routing"
+2. `cp -R agent/agents/template agent/agents/<name>` and move `agent.md.template` → `agent/agents/<name>.md`
+3. Replace the `<placeholder>` markers; adapt the system prompt and project map to your domain
+4. Claude Code: copy the definition into `.claude/agents/<name>.md` so it's discovered as a native subagent. Definition only — the state folder stays under `agent/agents/<name>/`; the definition's full `agent/agents/<name>/...` paths (state-folder, PROJECT_MAP reference) are the links that let the copy find its memory. Re-copy after editing the definition.
+5. Reference the new agent from your main schema (`AGENTS.md`) under "Agent routing"
 
 ## Agent routing
 
@@ -71,7 +68,6 @@ Example:
 
 | Task type | Agent |
 |---|---|
-| Backend (sync, billing, API) | backend-dev |
-| Frontend (UI, editor, mobile) | frontend-dev |
-| Data analysis | data-eng |
+| Backend (API, DB, jobs) | `<your-backend-agent>` |
+| Frontend (UI, styling) | `<your-frontend-agent>` |
 ```

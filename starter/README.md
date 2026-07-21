@@ -41,7 +41,7 @@ Without `/morning`, `/endday`, `/ingest`, `/lint` — `memory/` is just static f
 
 Simple Mode is for projects where one or two people work with one or two AI agents. When you need:
 
-- Multi-domain agent state (separate context per role: backend-dev, frontend-dev, etc.)
+- Multi-domain agent state (separate context per role: backend, frontend, etc. — grown from a blank agent template)
 - Behavioral rules (auto-loaded policies, e.g. testing rules, cost-aware LLM routing)
 - 5 more advanced skills (`/create-spec`, `/call-debrief`, `/web-researcher`, `/create`, `/swarm`)
 - Hooks (runtime enforcement: session-start auto-load, commit memory reminders)

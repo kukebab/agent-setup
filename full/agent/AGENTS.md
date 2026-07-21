@@ -103,9 +103,11 @@ Rules are policy. Don't restate them — refer to them.
 
 ## Agent dispatch
 
+No domain agents ship pre-installed — grow them with `/create-agent` (copies `agent/agents/template/`) when a domain accumulates real recurring work, then add a row here:
+
 | Task scope | Agent | When NOT to use |
 |---|---|---|
-| `api/`, `sync/`, `db/migrations/`, `lib/billing/` | `backend-dev` | Frontend work; cross-cutting refactors |
+| `<owned dirs>` | `<domain-agent>` | Work outside its area; cross-cutting refactors |
 | Trivial fixes, single-file edits | (main agent) | Multi-file structural changes |
 | Cross-domain refactors | (main agent — orchestrate) | When scope is purely single-domain |
 

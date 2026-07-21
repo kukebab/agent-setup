@@ -113,8 +113,9 @@ your-project/
     │   ├── testing.md, file-size-triggers.md, cost-aware-llm.md
     │   ├── identity.md.template  ← give your AI a persona
     │   └── language.md.template  ← communication preferences
-    ├── agents/              ← domain specialists with persistent state — install-time prompt asks which to include
-    │   └── backend-dev/          ← the worked example; frontend-dev/, infra/, data-eng/ also ship as blank templates
+    ├── agents/              ← domain specialists with persistent state — grown via /create-agent
+    │   └── template/             ← canonical blank agent, copied for every new agent
+    │       ├── agent.md.template ← definition file (renamed to <name>.md on copy)
     │       ├── STATUS.md         ← events log
     │       ├── MEMORY.md         ← long-term gotchas
     │       ├── PROJECT_MAP.md    ← code map (REPLACE WITH YOUR STACK)
@@ -151,7 +152,7 @@ Plus `adapters/` in the source repo for tool-specific wiring (Cursor, Aider, Win
 **Over weeks:**
 - `wiki/` compounds — concepts get richer with every ingest
 - `learnings/mistakes.md` stays curated (promote → `patterns.md`, archive stale) — your AI gets sharper, not flatter
-- Agent state stays continuous — `backend-dev` remembers the sync incident from 3 weeks ago
+- Agent state stays continuous — the backend agent remembers the sync incident from 3 weeks ago
 - Pre-commit hook catches stale state markers before they ship
 
 ---

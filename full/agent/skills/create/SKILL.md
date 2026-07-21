@@ -29,7 +29,7 @@ Internal signal: you've watched the user do the same workflow 2+ times.
 
 **Skill** = a workflow the AI does (e.g. ingesting a URL, running a lint, drafting a spec).
 
-**Agent** = a domain-specialized subagent with persistent state (e.g. backend-dev that owns sync/billing code).
+**Agent** = a domain-specialized subagent with persistent state (e.g. a backend agent that owns the API and DB code).
 
 Quick test:
 

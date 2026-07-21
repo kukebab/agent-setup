@@ -62,7 +62,7 @@ After install:
    - `agent/memory/wiki/` — delete sync-engine/billing-flows/etc., add yours (or empty `INDEX.md`)
    - `agent/memory/outputs/specs/` and `outputs/research/` — delete the Acme samples
    - `agent/memory/daily/` — delete the Acme example day
-   - `agent/agents/backend-dev/PROJECT_MAP.md` — replace with your stack/dirs
+   - `agent/agents/<name>/PROJECT_MAP.md` — for any agent you create from `agent/agents/template/`, replace with your stack/dirs
 3. **Try the trace→learnings loop:** `python agent/scripts/mine_learnings.py --no-llm` mines your latest session transcript for candidate learnings (zero setup; review via `/mine-learnings`)
 4. **Optional persona:** rename `agent/rules/identity.md.template` → `identity.md`, customize
 5. **Optional personal context:** rename `agent/memory/USER.md.template` → `USER.md`, fill in
@@ -72,7 +72,7 @@ After install:
 
 The schema is stack-agnostic. Stack only appears in:
 
-- `agent/agents/backend-dev/PROJECT_MAP.md` — has explicit `<!-- REPLACE WITH YOUR STACK -->` marker
+- `agent/agents/<name>/PROJECT_MAP.md` of any agent you create from `agent/agents/template/` — has explicit `<!-- REPLACE WITH YOUR STACK -->` marker
 - Optionally any rules you write yourself
 
 Replace those with your stack. Everything else (rules, skills, hooks, schema) is universal.

@@ -48,6 +48,7 @@ agent-setup/
 ├── README.md                ← human-facing pitch
 ├── INSTALL.md               ← human manual install
 ├── INSTALL_PROMPT.md        ← THE killer file — paste-into-AI installer
+├── INSTALL_PROMPT_CLAUDE_CODE.md ← Claude Code–only installer (Advanced, blank template agent, no domain agents)
 ├── UPDATE_PROMPT.md         ← paste-into-AI updater for existing installs
 ├── CHANGELOG.md             ← dated log of changes to the pattern itself
 ├── EXAMPLE_TOUR.md          ← walkthrough of Acme Notes example
@@ -107,7 +108,7 @@ Edit files in `starter/`, `full/`, `adapters/` as appropriate. Before committing
 
 - Don't add a `memory/` directory at the repo root (would conflict with installs)
 - Don't add a `.claude/` directory at repo root (same reason)
-- Don't bake a specific stack into `starter/` or schema files — only the example `backend-dev` agent in `full/` may have stack-specific paths, and only with the `<!-- REPLACE WITH YOUR STACK -->` marker
+- Don't bake a specific stack into `starter/` or schema files — no agent files ship stack-specific paths; the blank agent template (`full/agent/agents/template/`) carries only the `<!-- REPLACE WITH YOUR STACK -->` marker and `<placeholder>` paths
 - Don't add rules with names matching personal patterns to `full/agent/rules/` — keep them universal
 - Don't merge changes that would expand `full/agent/AGENTS.md` past ~250 lines — it's a router, not a rule dump (full content lives in `full/agent/rules/`)
 

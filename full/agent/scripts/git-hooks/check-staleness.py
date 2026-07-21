@@ -154,6 +154,8 @@ def check_client_current_state(path: str) -> None:
 
 
 for path in staged_files():
+    if path.startswith("agent/agents/template/"):
+        continue  # canonical blank agent — placeholder dates by design
     if path == "agent/memory/STATE.md":
         check_simple_header(path, hard_block=True)
     elif re.match(r"^agent/agents/[^/]+/PROJECT_MAP\.md$", path):

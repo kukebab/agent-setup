@@ -1,4 +1,4 @@
-# data-eng — Project Status
+# <name> — Project Status
 
 Last updated: YYYY-MM-DD (agent created)
 

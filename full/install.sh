@@ -137,8 +137,8 @@ for tool in "${detected_tools[@]}"; do
       copy_file_safe "$SOURCE_ROOT/AGENTS.md" "$TARGET_ROOT/AGENTS.md"
       # Claude Code auto-discovers skills from .claude/skills/<name>/SKILL.md and
       # subagents from .claude/agents/<name>.md — copy them so /morning, /endday,
-      # backend-dev, etc. are native Claude Code skills/subagents, not just prose
-      # inside AGENTS.md. These are copies of agent/skills/ and agent/agents/, not
+      # and any created domain agents are native Claude Code skills/subagents, not
+      # just prose inside AGENTS.md. These are copies of agent/skills/ and agent/agents/, not
       # symlinks; re-run this step if you edit a skill/agent under agent/ later.
       if [ -d "$TARGET_ROOT/agent/skills" ]; then
         for skill_dir in "$TARGET_ROOT/agent/skills"/*/; do

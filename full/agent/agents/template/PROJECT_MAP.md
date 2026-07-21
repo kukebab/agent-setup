@@ -1,16 +1,17 @@
-# infra — Project Map
+# <name> — Project Map
 
 Last updated: YYYY-MM-DD
 
 <!-- ============================================================
      REPLACE WITH YOUR STACK
      ============================================================
-     This is a blank template. Replace everything below with your
-     actual infra directory structure and responsibilities.
+     This is a blank template. Replace everything below with the
+     actual directory structure and file responsibilities this
+     agent owns.
 
      When adapting this template to your project:
      1. Replace the directory structure below with yours
-     2. Update the file responsibilities to match your setup
+     2. Update the file responsibilities to match your code
      3. Keep the format — file paths, one-line descriptions
 
      The format is what matters; the specific paths are yours to fill in.
@@ -20,29 +21,23 @@ Last updated: YYYY-MM-DD
 
 ```
 <project-root>/
-├── <infra-dir>/          # ★ this agent owns (terraform/, deploy/, .github/workflows/, etc.)
-└── <app-dirs>/           # NOT this agent's domain
+├── <owned-dir>/         # ★ this agent owns
+├── <other-dir>/         # NOT this agent's domain
+└── <shared/config files>
 ```
 
-## CI/CD
+## `<owned-dir>/` — <what lives here>
 
 | Path | Responsibility |
 |---|---|
 | `<path>` | `<what it does>` |
 
-## Infra-as-code
+## Test layout
 
-| Path | Responsibility |
+| Path | What's tested |
 |---|---|
-
-## Environments
-
-| Environment | Notes |
-|---|---|
-| `<staging/prod/...>` | `<url, deploy trigger, notes>` |
 
 ## Key dependencies
 
-- `<cloud provider>`
-- `<IaC tool>`
-- `<monitoring/observability stack>`
+- `<dependency>`
+- `<dependency>`

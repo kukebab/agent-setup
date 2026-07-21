@@ -87,18 +87,15 @@ Based on Step 1, recommend a mode:
 
 State your recommendation, ask the user to confirm or override.
 
-### Step 2.5 — Choose which agents to install (Advanced Mode only)
+### Step 2.5 — Choose which domain agents to create (Advanced Mode only)
 
-`full/agent/agents/` ships 4 ready-to-install role templates:
+`full/agent/agents/` ships no pre-built agents — only `agent/agents/template/`, the canonical blank agent (definition file `agent.md.template` + 4 state files, all `<placeholder>`-marked). It is **always** copied with the bundle; it's not an installable agent but the source every new agent is copied from (after install, `/create-agent` does this).
 
-- **`backend-dev`** — the worked example (filled in for the fictional Acme Notes project, Next.js + Postgres). Useful as a reference for what a filled-in agent looks like; stack-specific parts are still Acme's until you customize them.
-- **`frontend-dev`**, **`infra`**, **`data-eng`** — blank templates (no example content, just the `<!-- REPLACE WITH YOUR STACK -->` structure).
+Ask the user explicitly: **"Do you want any domain agents created now (e.g. backend, frontend, infra, data — or any domain name of yours), or none yet?"**
 
-Ask the user explicitly: **"Which of these domain agents do you want installed — backend-dev, frontend-dev, infra, data-eng, none of them, or a different domain name?"**
-
-- **Default recommendation if the user is unsure: install none yet.** The pattern's default is to grow into agents organically as domain ownership becomes clear (see `agent/agents/README.md` § "When to add an agent") — don't pre-create agents just because they're available.
-- Installing one or more upfront is the right call if the user already has clear domain boundaries (existing multi-person team, established backend/frontend split, etc.) — this is the exception, not the default.
-- If the user names a domain that isn't one of the 4 bundled templates (e.g. "mobile-dev", "security"), that's fine — build it from the `backend-dev.md`/`backend-dev/` structure per `agent/agents/README.md` § "Adding your own agent", blank (not Acme-filled) like the other blank templates.
+- **Default recommendation if the user is unsure: none yet.** The pattern's default is to grow into agents organically as domain ownership becomes clear (see `agent/agents/README.md` § "When to add an agent") — don't pre-create agents just because the mechanism exists.
+- Creating one or more upfront is the right call if the user already has clear domain boundaries (existing multi-person team, established backend/frontend split, etc.) — this is the exception, not the default.
+- For each requested domain: copy `agent/agents/template/` and fill its placeholders per `agent/agents/README.md` § "Adding an agent" — copy first, then fill; never write the files from scratch.
 
 For each agent selected, in Step 4 you will: copy its `<name>.md` definition file, copy its `<name>/` state folder (`STATUS.md`, `MEMORY.md`, `PROJECT_MAP.md`, `RULES.md`), customize both, and add a row for it to `agent/AGENTS.md`'s "Agent dispatch" table.
 
@@ -130,6 +127,7 @@ Files to install (Simple Mode — paths at project root):
   - agent/memory/{wiki,daily,outputs,raw}/
   - agent/rules/ (behavioral policies)
   - agent/skills/ (reusable workflows, incl. review-learnings + mine-learnings)
+  - agent/agents/template/ (canonical blank agent — always copied, /create-agent copies from it)
   - agent/agents/<selected-agents>.md + agent/agents/<selected-agents>/ (4-file state per agent chosen in Step 2.5 — may be none)
   - agent/hooks/ (session-start, commit-memory-reminder)
   - agent/scripts/context.sh, agent/scripts/mine_learnings.py (+ tests), agent/scripts/git-hooks/
@@ -150,8 +148,8 @@ Project-specific customization I'll do:
   - Replace Acme Notes priorities in STATE.md with: [your priorities]
   - Replace Acme example wiki with: [your topics, or empty wiki/ ready for ingest]
   [Advanced only:]
-  - Agents to install: [none | backend-dev | frontend-dev | infra | data-eng | custom: <name>] (from Step 2.5)
-  - Replace each installed agent's PROJECT_MAP with: [your stack]
+  - Agents to create from agent/agents/template/: [none | <domain names>] (from Step 2.5)
+  - Fill each created agent's PROJECT_MAP with: [your stack]
 
 Proceed?
 ```
@@ -202,22 +200,20 @@ For each file in the chosen mode:
 - **Simple Mode:** these ARE the full schema. Change line 1 title from `# Acme Notes — AI Agent Schema (...)` to `# <project-name> — AI Agent Schema (...)`, and search the body for any other "Acme Notes" mentions to remove or replace with the project name. Both files have identical content — keep them in sync.
 - **Advanced Mode:** the root `AGENTS.md`/`CLAUDE.md` are thin stubs — leave their content as-is (they just point at `agent/AGENTS.md`), no per-project customization needed. The actual schema customization happens in **`agent/AGENTS.md`**: change line 1 title the same way, search its body for "Acme Notes" mentions, and keep it as the single canonical copy — there is no `agent/CLAUDE.md` to sync separately.
 
-**For each agent selected in Step 2.5 (Advanced only) — copy and customize its `<name>.md` + `<name>/` folder:**
+**For each agent chosen in Step 2.5 (Advanced only) — create it from `agent/agents/template/`:**
 
-- Copy `agent/agents/<name>.md` and `agent/agents/<name>/` (all 4 state files) from the source repo
-- If the requested domain isn't one of the 4 bundled templates, build it from `backend-dev.md`/`backend-dev/` per `agent/agents/README.md` § "Adding your own agent" — blank, not Acme-filled
+- `cp -R agent/agents/template agent/agents/<name>`, then move `agent.md.template` → `agent/agents/<name>.md` — copy first, then fill; never write the files from scratch
 - Add a row for it to `agent/AGENTS.md`'s "Agent dispatch" table
 
 **`<name>.md`:**
-- Update the `description:` frontmatter field — for `backend-dev` it currently says "for Acme Notes", replace with "for <project-name>" or just "for this project" (the 3 blank templates are already generic — verify, don't assume)
-- The system prompt references `PROJECT_MAP.md` by its full path from project root (`agent/agents/<name>/PROJECT_MAP.md`) — no hardcoded Acme paths in any of the 4 templates, usually no edit needed, just verify
-- If renaming the agent (e.g. `backend-dev` → `backend` or `api-eng`), rename the `.md` file AND the state folder, AND update every `agent/agents/backend-dev/` path reference inside the `.md` (the `state-folder:` frontmatter, the "State files" section, and the system prompt's PROJECT_MAP line) to the new name — these are full paths, not symlinks, so they don't update themselves
+- Replace every `<placeholder>` (name, domain, scope, dispatch rules) and delete the `AGENT TEMPLATE` instruction comment block
+- Every path reference inside the `.md` must use the agent's name (the `state-folder:` frontmatter, the "State files" section, the system prompt's PROJECT_MAP line) — these are full paths from the project root (`agent/agents/<name>/...`), not symlinks, so fill them all consistently
 
 **`<name>/` state folder:**
-- `PROJECT_MAP.md` — REPLACE with the user's actual stack and directory structure (this is critical; the `<!-- REPLACE WITH YOUR STACK -->` marker tells you exactly where — every bundled template has one, not just backend-dev)
-- `STATUS.md` — for `backend-dev`: clear all Acme entries; write one fresh event line: `Agent created YYYY-MM-DD via agent-os install`. For the blank templates: replace the `YYYY-MM-DD` placeholders with today's date, keep "No events yet."
-- `MEMORY.md` — for `backend-dev`: empty out Acme gotchas, leave header + "Empty until non-obvious gotchas are discovered." The blank templates are already in this state — verify, don't duplicate the note.
-- `RULES.md` — review each rule. Generic rules (like "production migrations during low-traffic windows") apply universally; project-specific ones may need to be adapted. For `backend-dev`, fix any leftover Acme specifics; the blank templates' starter rules are already generic but still worth a sanity check against the user's actual stack.
+- `PROJECT_MAP.md` — REPLACE with the user's actual stack and directory structure (this is critical; the `<!-- REPLACE WITH YOUR STACK -->` marker tells you exactly where)
+- `STATUS.md` — replace the `YYYY-MM-DD` placeholders with today's date; the created-event line becomes `Agent created YYYY-MM-DD via agent-os install`, keep "No events yet."
+- `MEMORY.md` — replace `<name>` in the header, keep it empty ("Empty until non-obvious gotchas are discovered")
+- `RULES.md` — replace `<name>` in the header; keep the starter rules, sanity-check them against the user's actual stack
 
 **`agent/rules/identity.md.template` and `language.md.template`:**
 - Leave as templates (don't rename to `.md`) unless user explicitly asks
@@ -236,7 +232,7 @@ For each file in the chosen mode:
 **`.claude/skills/` and `.claude/agents/` (Claude Code only):**
 - Claude Code auto-discovers skills from `.claude/skills/<name>/SKILL.md` and subagents from `.claude/agents/<name>.md` — reading `AGENTS.md`/`CLAUDE.md` alone is not enough for those to show up as native `/slash-commands` or dispatchable subagents.
 - Copy every `agent/skills/<name>/` (Simple Mode: `agent-os/skills/<name>/`) into `.claude/skills/<name>/` — same `SKILL.md` content, just duplicated at the path Claude Code scans. Skip `skills/README.md` (it's an index, not a skill).
-- For each agent installed in Step 2.5 (Advanced only), copy its `agent/agents/<name>.md` definition file into `.claude/agents/<name>.md`. Do NOT copy `agent/agents/README.md` or the `<name>/` state folders — Claude Code only reads the single `.md` definition from `.claude/agents/`, the state folder stays under `agent/agents/<name>/` where the agent's own system prompt points it.
+- For each agent created in Step 2.5 (Advanced only), copy its `agent/agents/<name>.md` definition file into `.claude/agents/<name>.md`. Do NOT copy `agent/agents/README.md` or the `<name>/` state folders — Claude Code only reads the single `.md` definition from `.claude/agents/`, the state folder stays under `agent/agents/<name>/` where the agent's own system prompt points it.
 - These are copies, not symlinks — if you later rename or edit a skill/agent under `agent/`, re-copy into `.claude/` to keep them in sync. Mention this in the final summary.
 
 **Final cleanup after install — run a residue check:**
@@ -246,7 +242,6 @@ grep -irE "acme notes|bluefin|tessera|maya( chen)?|alex( rivera)?" . --exclude-d
 ```
 
 After customization, this should return only:
-- Lines in `agent/agents/README.md` describing the bundled example (intentional)
 - Lines in `agent/rules/identity.md.template` "Filled-in example" section (intentional)
 - Lines containing Maya/Alex only if those are the user's real project names
 - Nothing else.
@@ -270,7 +265,7 @@ Detect from Step 1 which AI tool the user has, and wire the appropriate adapter:
 
 | Tool detected | Action |
 |---|---|
-| Claude Code (`.claude/` or CLAUDE.md present) | `CLAUDE.md` at root is enough for the AI to *read* the schema (Advanced: it's a stub pointing at `agent/AGENTS.md`) — but Claude Code also natively auto-discovers skills and subagents from specific folders, so additionally: copy each `agent/skills/<name>/` (Simple: `agent-os/skills/<name>/`) into `.claude/skills/<name>/`, and copy each installed `agent/agents/<name>.md` (Advanced only — skip `README.md`) into `.claude/agents/<name>.md`. This makes `/morning`, `/endday`, `backend-dev`, etc. available as first-class Claude Code skills/subagents, not just prose inside AGENTS.md. Also suggest `.claude/settings.json` hook config (see `agent/hooks/README.md`) |
+| Claude Code (`.claude/` or CLAUDE.md present) | `CLAUDE.md` at root is enough for the AI to *read* the schema (Advanced: it's a stub pointing at `agent/AGENTS.md`) — but Claude Code also natively auto-discovers skills and subagents from specific folders, so additionally: copy each `agent/skills/<name>/` (Simple: `agent-os/skills/<name>/`) into `.claude/skills/<name>/`, and copy each installed `agent/agents/<name>.md` (Advanced only — skip `README.md`) into `.claude/agents/<name>.md`. This makes `/morning`, `/endday`, and any created domain agents available as first-class Claude Code skills/subagents, not just prose inside AGENTS.md. Also suggest `.claude/settings.json` hook config (see `agent/hooks/README.md`) |
 | Codex / OpenCode (`.codex/` or AGENTS.md present) | `AGENTS.md` at root is enough |
 | Cursor (`.cursor/` present) | Also create `.cursor/rules/main.mdc` (copy from `adapters/cursor/`) |
 | Aider (`.aider.conf.yml` present) | Also create `CONVENTIONS.md` (copy from `adapters/aider/`) |
@@ -353,8 +348,7 @@ Default: NEVER destroy existing memory. The user's notes are sacred.
 The user is in charge. If they say:
 - "Skip the wiki" → skip the wiki
 - "I don't want adapters for Cursor" → skip cursor adapter
-- "Use a different agent name than backend-dev" → rename
-- "I don't want any agents yet" → skip Step 2.5 entirely, install none
+- "I don't want any agents yet" → skip Step 2.5 entirely, create none
 - "I don't want git hooks" → skip Step 7
 
 The pattern is modular. Components are independent.
@@ -367,7 +361,7 @@ STOP. Ask the user. Examples of things to ask:
 - "Who are your key clients or customers?" (for `projects/` if Advanced)
 - "What are your top 3 priorities right now?" (for STATE.md)
 - "Your preferred response language?" (for language.md template)
-- "Which agents do you want installed — backend-dev, frontend-dev, infra, data-eng, none, or something else?" (Step 2.5)
+- "Do you want any domain agents created now — and for which domains?" (Step 2.5)
 
 Don't guess. The cost of asking is 30 seconds. The cost of guessing wrong is restarting.
 

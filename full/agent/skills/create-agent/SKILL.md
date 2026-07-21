@@ -34,35 +34,67 @@ Pin down before writing anything:
 
 If the user can't answer, the agent isn't ready to exist yet.
 
-### 2. Create the definition file
+### 2. Copy the template folder — FIRST, before any writing
 
-`agent/agents/<name>.md` — frontmatter (`name`, `description`, `state-folder: agent/agents/<name>/`,
-`model`, `effort`) + system prompt + dispatch rules. Copy `agent/agents/frontend-dev.md` as the
-blank template (or `backend-dev.md` to see a filled-in example).
+The canonical blank agent lives in `agent/agents/template/`. Copy it, then rename the definition
+file out of the state folder:
 
-### 3. Create the state folder — empty
+```bash
+cp -R agent/agents/template agent/agents/<name>
+mv agent/agents/<name>/agent.md.template agent/agents/<name>.md
+```
 
-`agent/agents/<name>/` with the 4 state files, each a skeleton with headers only, no content:
+Never edit `agent/agents/template/` itself — it must stay a pristine blank for the next agent.
+Never write the files from scratch either: the template is the single source of the agent file
+structure.
 
-- `STATUS.md` — one entry: "YYYY-MM-DD — Agent created". Current state: "Empty until first task."
-- `MEMORY.md` — empty. Fills as lessons emerge.
-- `PROJECT_MAP.md` — empty apart from the section headers. Fills as the agent explores its area.
-- `RULES.md` — empty. Rules are added when established, never invented upfront.
+### 3. Fill the copy — minimally
 
-Do NOT pre-populate these files with guesses. An empty file that fills from real work beats a
+Now fill placeholders in the copied files, and nothing more:
+
+- `<name>.md` — replace every `<placeholder>` (name, domain, scope, dispatch rules), delete the
+  `AGENT TEMPLATE` comment block.
+- `STATUS.md` — replace `YYYY-MM-DD` with today's date. Keep "Empty until first task."
+- `MEMORY.md` — replace `<name>` in the header. Stays empty; fills as lessons emerge.
+- `PROJECT_MAP.md` — replace `<name>` and today's date. The stack section fills as the agent
+  explores its area (the `REPLACE WITH YOUR STACK` marker shows where).
+- `RULES.md` — replace `<name>` in the header. Keep the starter rules; add nothing speculative.
+
+Do NOT pre-populate state with guesses. An empty file that fills from real work beats a
 speculative one that has to be corrected later.
 
-### 4. Wire into routing
+### 4. Register in `.claude/agents/` — with the memory links intact
 
-Add a row to the "Agent routing" table in the main schema (`AGENTS.md`), and — if the tool supports
-native subagents (e.g. Claude Code) — copy the definition file to its discovery location
-(`.claude/agents/<name>.md`).
+The agent must exist in BOTH places:
 
-### 5. Confirm to user
+- `agent/agents/<name>.md` + `agent/agents/<name>/` — the source of truth (definition + state)
+- `.claude/agents/<name>.md` — a copy of the definition file, so Claude Code discovers it as a
+  native dispatchable subagent
+
+```bash
+cp agent/agents/<name>.md .claude/agents/<name>.md
+```
+
+Before copying, verify the memory links inside the definition file: the `state-folder:` frontmatter,
+the "State files" section, and the system prompt's PROJECT_MAP line must all reference the state
+files by **full path from the project root** (`agent/agents/<name>/STATUS.md`, `MEMORY.md`,
+`PROJECT_MAP.md`, `RULES.md`). Those links are what lets the `.claude/agents/` copy find its memory —
+the state folder itself is NOT copied; it stays under `agent/agents/<name>/` as the single copy.
+
+It's a copy, not a symlink: whenever the definition under `agent/agents/` changes later, re-copy it
+to `.claude/agents/`. (For tools without native subagent discovery, skip this step — the definition
+under `agent/agents/` is enough.)
+
+### 5. Wire into routing
+
+Add a row to the "Agent routing" table in the main schema (`AGENTS.md`).
+
+### 6. Confirm to user
 
 ```
 Created agent: <name>
 Owns: [list]
+Definition: agent/agents/<name>.md (+ copy in .claude/agents/<name>.md)
 State: agent/agents/<name>/ (empty — fills as work happens)
 ```
 
@@ -88,8 +120,12 @@ Rules of thumb:
 
 ## Anti-patterns
 
+- Writing agent files by hand instead of copying `agent/agents/template/` — hand-written files drift from the canonical structure
+- Editing `agent/agents/template/` while creating an agent — the template stays pristine
 - Pre-filling state files with speculation "to be helpful" — they must reflect reality only
 - Creating an agent before the domain has real recurring work — wait for the 3+ task signal
 - Updating `STATUS.md` but forgetting `PROJECT_MAP.md` after structural changes — the map goes stale silently
 - Writing requirements/wishes only in the conversation and not into state — next session starts blind
 - Overlapping ownership with an existing agent — split or merge, never share a directory
+- Copying the state folder into `.claude/agents/` — only the definition `.md` goes there; state lives once, under `agent/agents/<name>/`
+- Editing the `.claude/agents/` copy directly — edit `agent/agents/<name>.md` and re-copy
